@@ -8,7 +8,7 @@ import { TELEGRAM_BOT_TOKEN, MY_CHAT_ID } from '$env/static/private';
 export async function sendMessage(text: string, orderId: string) {
     const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
-    await setWebhook('https://laptop.liam-cheneval.dev');
+    await setWebhook('https://pit-stop.liam-cheneval.dev');
 
     try {
         const response = await fetch(url, {
