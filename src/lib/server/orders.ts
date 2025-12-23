@@ -3,12 +3,9 @@ import { promises as fs } from 'fs';
 
 export async function updateOrderStatus(orderId: string, status: string) {
     // Simple JSON file "database" update
-    const dir = `${process.cwd()}/src/data`;
-    const dbPath = `${dir}/orders.json`;
+    const dbPath = `${process.cwd()}/orders.json`;
 
     try {
-        await fs.mkdir(dir, { recursive: true });
-
         let db: Record<string, any> = {};
         try {
             const raw = await fs.readFile(dbPath, 'utf8');
