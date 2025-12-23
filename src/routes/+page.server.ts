@@ -10,7 +10,7 @@ export interface OrderItem {
 }
 
 export const load: PageServerLoad = async () => {
-    const kitchenStatus = getKitchenStatus();
+    const kitchenStatus = await getKitchenStatus();
     return { kitchenStatus };
 };
 

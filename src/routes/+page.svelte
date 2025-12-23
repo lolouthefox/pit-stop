@@ -3,6 +3,7 @@
 	import IconButton from '$lib/comps/IconButton.svelte';
 	import { categories } from '$lib/deliveryAddresses';
 	import { MenuCategory, menu, type MenuItem } from '$lib/menu';
+	import { onMount } from 'svelte';
 	import { type OrderItem } from './+page.server';
 
 	let cooking = $state(false);
@@ -77,9 +78,20 @@
 		}
 		return false;
 	}
+
+	let kitchenOpen = $derived(false);
+	onMount(async () => {
+		const res = await fetch('/api/kitchenStatus');
+		if (res.ok) {
+			const data = await res.json();
+			kitchenOpen = data.status === 'open';
+		} else {
+			kitchenOpen = false;
+		}
+	});
 </script>
 
-{#if data.kitchenStatus === 'closed'}
+{#if kitchenOpen === false}
 	<div class="flex h-screen flex-col items-center justify-center gap-4 p-4 text-center">
 		<span class="text-5xl">🍳</span>
 		<span>La cuisine est fermé!</span>

@@ -39,10 +39,10 @@ export async function POST({ request }) {
 
             if (data === 'close_kitchen') {
                 // Logic to close the kitchen
-                closeKitchen();
+                await closeKitchen();
             } else {
                 // Logic to open the kitchen
-                openKitchen();
+                await openKitchen();
             }
 
             return json({
