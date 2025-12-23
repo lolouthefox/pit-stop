@@ -35,7 +35,8 @@
 		pending: 'En attente',
 		preparing: 'Préparation en cours',
 		delivering: 'Livraison en cours',
-		done: 'Livré'
+		done: 'Livré',
+		cancelled: 'Annulé'
 	};
 
 	onMount(() => {
