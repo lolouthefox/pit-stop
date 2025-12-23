@@ -91,10 +91,10 @@
 	});
 </script>
 
-{#if kitchenOpen === false}
+{#if !kitchenOpen}
 	<div class="flex h-screen flex-col items-center justify-center gap-4 p-4 text-center">
 		<span class="text-5xl">🍳</span>
-		<span>{kitchenOpen ? 'La cuisine est fermée !' : 'Chargement...'}</span>
+		<span>{kitchenOpen === false ? 'La cuisine est fermée !' : 'Chargement...'}</span>
 	</div>
 {:else}
 	<div class="flex flex-col gap-2 p-4">
