@@ -1,5 +1,6 @@
 export enum MenuCategory {
     Drinks = 'Boissons',
+    Breakfast = 'Petit Déjeuner',
     Snacks = 'Snacks',
     Gouter = 'Goûter'
 }
@@ -21,7 +22,31 @@ export const menu: MenuItem[] = [
         price: 3,
         desc: "Jus d'orange fraîchement pressé pour bien commencer la journée !",
         image: '/assets/orange.jpg',
-        category: MenuCategory.Drinks
+        category: MenuCategory.Breakfast
+    },
+    {
+        id: 'espresso',
+        name: 'Espresso',
+        price: 3,
+        desc: "Un espresso fort et aromatique pour bien démarrer la journée.",
+        image: '/assets/espresso.webp',
+        category: MenuCategory.Breakfast
+    },
+    {
+        id: 'cappuccino',
+        name: 'Cappuccino',
+        price: 3,
+        desc: "Un cappuccino crémeux avec une mousse de lait onctueuse.",
+        image: '/assets/cappuccino.jpg',
+        category: MenuCategory.Breakfast
+    },
+    {
+        id: 'hot-chocolate',
+        name: 'Chocolat Chaud Milka',
+        price: 3,
+        desc: "Un chocolat chaud riche et crémeux, parfait pour se réchauffer.",
+        image: '/assets/hot-chocolate.jpg',
+        category: MenuCategory.Breakfast
     },
     {
         id: 'ice-tea-pêche',
