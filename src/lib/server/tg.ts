@@ -1,5 +1,6 @@
 // src/lib/server/telegram.ts
 import { TELEGRAM_BOT_TOKEN, MY_CHAT_ID } from '$env/static/private';
+import { PUBLIC_SERVER_URL } from '$env/static/public';
 
 /**
  * Sends a message to your private Telegram chat.
@@ -8,7 +9,7 @@ import { TELEGRAM_BOT_TOKEN, MY_CHAT_ID } from '$env/static/private';
 export async function sendMessage(text: string, orderId: string | null = null) {
     const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
-    await setWebhook('https://pit-stop.liam-cheneval.dev');
+    await setWebhook(PUBLIC_SERVER_URL || 'https://pit-stop.liam-cheneval.dev');
 
     try {
         const response = await fetch(url, {

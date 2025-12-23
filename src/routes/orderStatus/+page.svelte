@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
-	let status: string = $state('Loading...');
+	let status: string = $state('Chargement...');
 	let orderIds: string[] = $state([]);
 	let orderStatuses: Array<{ id: string; status: string; updatedAt?: string }> = $state([]);
 
@@ -18,16 +18,16 @@
 				const response = await fetch(`/orderStatus/api?${idsParam}`);
 				if (response.ok) {
 					orderStatuses = await response.json();
-					status = 'Loaded';
+					status = 'Chargé';
 				} else {
-					status = 'Error loading statuses';
+					status = 'Erreur lors du chargement des statuts';
 				}
 			} else {
-				status = 'No orders found';
+				status = 'Aucune commande trouvée';
 			}
 		} catch (e) {
 			console.error('unable to read localStorage orderIds', e);
-			status = 'Error';
+			status = 'Erreur lors de la lecture des commandes';
 		}
 	}
 
@@ -51,34 +51,59 @@
 			clearInterval(interval);
 		};
 	});
+
+	function removeOrderId(orderId: string) {
+		const key = 'orderIds';
+		try {
+			const raw = localStorage.getItem(key);
+			let ids = raw ? JSON.parse(raw) : [];
+
+			// Remove the specified orderId
+			ids = ids.filter((id: string) => id !== orderId);
+
+			// Update localStorage
+			localStorage.setItem(key, JSON.stringify(ids));
+			orderIds = ids; // Update the orderIds state
+
+			location.reload();
+		} catch (e) {
+			console.error('unable to remove orderId from localStorage', e);
+		}
+	}
 </script>
 
 {#if orderStatuses.length > 0}
-	<ul>
+	<div class="m-4 flex flex-col gap-4">
 		{#each orderStatuses as order, i (order.id)}
-			<li class="p-4">
+			<div class="flex flex-col gap-2 rounded-2xl border border-black/25 p-4 shadow-md">
 				<div><strong>Livraison {i + 1}</strong></div>
 				{#if order.status == 'done'}
 					<div class="flex w-fit rounded-full bg-green-100 p-2 pr-4 pl-4 text-green-800">
 						{traductions[order.status]}
 					</div>
+					<button
+						class="rounded-full bg-red-800 p-2 text-red-200"
+						onclick={() => removeOrderId(order.id)}>Supprimer</button
+					>
 				{:else if order.status == 'cancelled'}
 					<div class="flex w-fit rounded-full bg-red-100 p-2 pr-4 pl-4 text-red-800">
 						{traductions[order.status]}
 					</div>
+					<button
+						class="rounded-full bg-red-800 p-2 text-red-200"
+						onclick={() => removeOrderId(order.id)}>Supprimer</button
+					>
 				{:else}
 					<div class="flex w-fit rounded-full bg-amber-100 p-2 pr-4 pl-4 text-amber-800">
 						{traductions[order.status]}
 					</div>
 				{/if}
-				{#if order.updatedAt}
-					<span class="text-sm opacity-50" style="font-size:0.9em;color:#666">
-						Mis à jour: {new Date(order.updatedAt).toLocaleString()}
-					</span>
-				{/if}
-			</li>
+			</div>
 		{/each}
-	</ul>
+	</div>
 {:else}
-	<p>{status}</p>
+	<div class="flex h-screen flex-col items-center justify-center gap-4 p-4 text-center">
+		<span class="text-5xl">🍳</span>
+		<span>{status}</span>
+	</div>
 {/if}

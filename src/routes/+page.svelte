@@ -163,6 +163,25 @@
 				};
 			}}
 		>
+			{#if order.length >= 1}
+				<code class="mt-4 mb-4 rounded-2xl border bg-black/5 p-4">
+					Veuillez ajouter des éléments au panier avant de commander. ===== VOTRE COMMANDE =====
+					<br />
+					{order.length === 1 ? 'Article' : 'Articles'} dans votre commande:
+					{#each order as item}
+						{#each menu.filter((menuItem) => menuItem.id === item.itemId) as menuItem}
+							<br />
+							- {item.amount}x {menuItem.name}
+						{/each}
+					{/each}
+					<br />
+					----
+					<br />
+					TOTAL: {order.length}
+					<br />
+					==========================
+				</code>
+			{/if}
 			<input type="hidden" name="order" value={JSON.stringify(order)} />
 			<input type="text" name="username" placeholder="Prénom" class="rounded-2xl p-4" />
 
@@ -184,9 +203,18 @@
 				class="rounded-2xl bg-blue-800 p-4 text-white disabled:opacity-50 disabled:grayscale-100"
 			/>
 		</form>
+		<button
+			class="rounded-2xl bg-red-800 p-4 text-white disabled:opacity-50 disabled:grayscale-100"
+			onclick={() => {
+				order = [];
+			}}
+			disabled={order.length === 0}
+		>
+			Annuler la commande
+		</button>
 		<a
 			href="/orderStatus"
-			class="flex justify-center rounded-2xl bg-blue-800 p-4 text-white disabled:opacity-50 disabled:grayscale-100"
+			class="mt-4 flex justify-center rounded-2xl bg-blue-800 p-4 text-white disabled:opacity-50 disabled:grayscale-100"
 			>🚚 Voir le statut des commandes</a
 		>
 	</div>
