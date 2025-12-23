@@ -1,45 +1,33 @@
-// Order status management functions
-import { promises as fs } from 'fs';
+// Order status management functions using Drizzle
+import { db } from '$lib/server/db';
+import { orders } from '$lib/server/db/schema';
+import { eq, inArray, lt, and } from 'drizzle-orm';
+
+const FINISHED_STATUSES = ['completed', 'cancelled'];
+const TEN_MINUTES_MS = 10 * 60 * 1000;
+
+async function cleanupFinishedOrders() {
+    const cutoff = new Date(Date.now() - TEN_MINUTES_MS);
+    await db.delete(orders).where(
+        and(inArray(orders.status, FINISHED_STATUSES), lt(orders.updatedAt, cutoff))
+    );
+}
 
 export async function updateOrderStatus(orderId: string, status: string) {
-    // Simple JSON file "database" update
-    const dbPath = `${process.cwd()}/orders.json`;
+    await db
+        .insert(orders)
+        .values({ id: orderId, status, updatedAt: new Date() })
+        .onConflictDoUpdate({ target: orders.id, set: { status, updatedAt: new Date() } });
 
-    try {
-        let db: Record<string, any> = {};
-        try {
-            const raw = await fs.readFile(dbPath, 'utf8');
-            db = raw ? JSON.parse(raw) : {};
-        } catch (err: any) {
-            if (err.code !== 'ENOENT') throw err; // ignore missing file
-        }
+    await cleanupFinishedOrders();
 
-        db[orderId] = {
-            status,
-            updatedAt: new Date().toISOString()
-        };
-
-        await fs.writeFile(dbPath, JSON.stringify(db, null, 2), 'utf8');
-        console.log(`Updated order ${orderId} to status ${status} in ${dbPath}`);
-        return db[orderId];
-    } catch (err) {
-        console.error('Failed to update order status:', err);
-        throw err;
-    }
+    return { id: orderId, status };
 }
 
 export async function getOrderStatus(orderId: string) {
-    const dbPath = `${process.cwd()}/orders.json`;
+    const result = await db.select().from(orders).where(eq(orders.id, orderId)).limit(1);
 
-    try {
-        const raw = await fs.readFile(dbPath, 'utf8');
-        const db = raw ? JSON.parse(raw) : {};
-        return db[orderId] || null;
-    } catch (err: any) {
-        if (err.code === 'ENOENT') {
-            return null; // file doesn't exist yet
-        }
-        console.error('Failed to get order status:', err);
-        throw err;
-    }
+    await cleanupFinishedOrders();
+
+    return result[0] ?? null;
 }
