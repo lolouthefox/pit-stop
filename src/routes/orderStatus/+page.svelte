@@ -61,6 +61,10 @@
 					<div class="flex w-fit rounded-full bg-green-100 p-2 pr-4 pl-4 text-green-800">
 						{traductions[order.status]}
 					</div>
+				{:else if order.status == 'cancelled'}
+					<div class="flex w-fit rounded-full bg-red-100 p-2 pr-4 pl-4 text-red-800">
+						{traductions[order.status]}
+					</div>
 				{:else}
 					<div class="flex w-fit rounded-full bg-amber-100 p-2 pr-4 pl-4 text-amber-800">
 						{traductions[order.status]}

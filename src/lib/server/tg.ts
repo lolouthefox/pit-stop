@@ -31,7 +31,8 @@ export async function sendMessage(text: string, orderId: string | null = null) {
                             { text: '🚚 En livraison', callback_data: `status_${orderId}_delivering` }
                         ],
                         [
-                            { text: '✅ Livré', callback_data: `status_${orderId}_done` }
+                            { text: '✅ Livré', callback_data: `status_${orderId}_done` },
+                            { text: '❌ Annulé', callback_data: `status_${orderId}_cancelled` }
                         ]
                     ]
                 }
