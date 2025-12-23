@@ -2,12 +2,17 @@
 	import { enhance } from '$app/forms';
 	import IconButton from '$lib/comps/IconButton.svelte';
 	import { categories } from '$lib/deliveryAddresses';
-	import { menu, type MenuItem } from '$lib/menu';
+	import { MenuCategory, menu, type MenuItem } from '$lib/menu';
 	import { type OrderItem } from './+page.server';
 
 	let cooking = $state(false);
 	let { form } = $props();
 	let order: OrderItem[] = $state([]);
+	const categoryTabs = Object.values(MenuCategory);
+	let selectedCategory: 'ALL' | MenuCategory = $state('ALL');
+	const filteredMenu = $derived(
+		selectedCategory === 'ALL' ? menu : menu.filter((item) => item.category === selectedCategory)
+	);
 
 	$effect(() => {
 		if (form?.orderId) {
@@ -75,7 +80,31 @@
 </script>
 
 <div class="flex flex-col gap-2 p-4">
-	{#each menu as item}
+	<div
+		class="sticky top-0 z-10 -mx-4 -mt-4 mb-2 flex gap-2 overflow-x-auto bg-white/85 px-4 py-3 backdrop-blur"
+	>
+		<button
+			type="button"
+			onclick={() => {
+				selectedCategory = 'ALL';
+			}}
+			class={`rounded-full px-3 py-2 text-sm font-semibold whitespace-nowrap shadow-sm transition ${selectedCategory === 'ALL' ? 'bg-blue-800 text-white' : 'bg-white text-black/70 ring-1 ring-black/10'}`}
+		>
+			Tout
+		</button>
+		{#each categoryTabs as tab}
+			<button
+				type="button"
+				onclick={() => {
+					selectedCategory = tab;
+				}}
+				class={`rounded-full px-3 py-2 text-sm font-semibold whitespace-nowrap shadow-sm transition ${selectedCategory === tab ? 'bg-blue-800 text-white' : 'bg-white text-black/70 ring-1 ring-black/10'}`}
+			>
+				{tab}
+			</button>
+		{/each}
+	</div>
+	{#each filteredMenu as item}
 		<div
 			class="items-center overflow-hidden rounded-2xl bg-cover bg-center"
 			style="background-image: url('{item.image}');"
