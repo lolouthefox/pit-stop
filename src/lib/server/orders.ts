@@ -32,8 +32,7 @@ export async function updateOrderStatus(orderId: string, status: string) {
 }
 
 export async function getOrderStatus(orderId: string) {
-    const dir = `${process.cwd()}/src/data`;
-    const dbPath = `${dir}/orders.json`;
+    const dbPath = `${process.cwd()}/orders.json`;
 
     try {
         const raw = await fs.readFile(dbPath, 'utf8');
