@@ -6,7 +6,7 @@
 	import { type OrderItem } from './+page.server';
 
 	let cooking = $state(false);
-	let { form } = $props();
+	let { form, data } = $props();
 	let order: OrderItem[] = $state([]);
 	const categoryTabs = Object.values(MenuCategory);
 	let selectedCategory: 'ALL' | MenuCategory = $state('ALL');
@@ -79,108 +79,115 @@
 	}
 </script>
 
-<div class="flex flex-col gap-2 p-4">
-	<div
-		class="sticky top-0 z-10 -mx-4 -mt-4 mb-2 flex gap-2 overflow-x-auto bg-white/85 px-4 py-3 backdrop-blur"
-	>
-		<button
-			type="button"
-			onclick={() => {
-				selectedCategory = 'ALL';
-			}}
-			class={`rounded-full px-3 py-2 text-sm font-semibold whitespace-nowrap shadow-sm transition ${selectedCategory === 'ALL' ? 'bg-blue-800 text-white' : 'bg-white text-black/70 ring-1 ring-black/10'}`}
+{#if data.kitchenStatus === 'closed'}
+	<div class="flex h-screen flex-col items-center justify-center gap-4 p-4 text-center">
+		<span class="text-5xl">🍳</span>
+		<span>La cuisine est fermé!</span>
+	</div>
+{:else}
+	<div class="flex flex-col gap-2 p-4">
+		<div
+			class="sticky top-0 z-10 -mx-4 -mt-4 mb-2 flex gap-2 overflow-x-auto bg-white/85 px-4 py-3 backdrop-blur"
 		>
-			Tout
-		</button>
-		{#each categoryTabs as tab}
 			<button
 				type="button"
 				onclick={() => {
-					selectedCategory = tab;
+					selectedCategory = 'ALL';
 				}}
-				class={`rounded-full px-3 py-2 text-sm font-semibold whitespace-nowrap shadow-sm transition ${selectedCategory === tab ? 'bg-blue-800 text-white' : 'bg-white text-black/70 ring-1 ring-black/10'}`}
+				class={`rounded-full px-3 py-2 text-sm font-semibold whitespace-nowrap shadow-sm transition ${selectedCategory === 'ALL' ? 'bg-blue-800 text-white' : 'bg-white text-black/70 ring-1 ring-black/10'}`}
 			>
-				{tab}
+				Tout
 			</button>
-		{/each}
-	</div>
-	{#each filteredMenu as item}
-		<div
-			class="items-center overflow-hidden rounded-2xl bg-cover bg-center"
-			style="background-image: url('{item.image}');"
-		>
-			<div class="flex items-center gap-4 bg-white/75 p-4 backdrop-blur-2xl">
-				<img
-					src={item.image}
-					alt={item.name}
-					class="h-14 w-14 rounded-sm object-cover object-center"
-				/>
-				<div class="flex flex-1 flex-col justify-center">
-					<span class="text-base font-bold">{item.name}</span>
-					<span class="text-xs text-black/75">{item.desc}</span>
-				</div>
-				{#if isInCart(item)}
-					{@const cartItem = isInCart(item)}
-					<div class="flex items-center justify-center gap-4">
+			{#each categoryTabs as tab}
+				<button
+					type="button"
+					onclick={() => {
+						selectedCategory = tab;
+					}}
+					class={`rounded-full px-3 py-2 text-sm font-semibold whitespace-nowrap shadow-sm transition ${selectedCategory === tab ? 'bg-blue-800 text-white' : 'bg-white text-black/70 ring-1 ring-black/10'}`}
+				>
+					{tab}
+				</button>
+			{/each}
+		</div>
+		{#each filteredMenu as item}
+			<div
+				class="items-center overflow-hidden rounded-2xl bg-cover bg-center"
+				style="background-image: url('{item.image}');"
+			>
+				<div class="flex items-center gap-4 bg-white/75 p-4 backdrop-blur-2xl">
+					<img
+						src={item.image}
+						alt={item.name}
+						class="h-14 w-14 rounded-sm object-cover object-center"
+					/>
+					<div class="flex flex-1 flex-col justify-center">
+						<span class="text-base font-bold">{item.name}</span>
+						<span class="text-xs text-black/75">{item.desc}</span>
+					</div>
+					{#if isInCart(item)}
+						{@const cartItem = isInCart(item)}
+						<div class="flex items-center justify-center gap-4">
+							<IconButton
+								onclick={() => {
+									addToCart(item);
+								}}>➕</IconButton
+							>
+							{cartItem ? cartItem.amount : '?'}
+							<IconButton
+								onclick={() => {
+									removeFromCart(item);
+								}}>➖</IconButton
+							>
+						</div>
+					{:else}
 						<IconButton
 							onclick={() => {
 								addToCart(item);
-							}}>➕</IconButton
+							}}>🛒</IconButton
 						>
-						{cartItem ? cartItem.amount : '?'}
-						<IconButton
-							onclick={() => {
-								removeFromCart(item);
-							}}>➖</IconButton
-						>
-					</div>
-				{:else}
-					<IconButton
-						onclick={() => {
-							addToCart(item);
-						}}>🛒</IconButton
-					>
-				{/if}
+					{/if}
+				</div>
 			</div>
-		</div>
-	{/each}
-	<form
-		method="POST"
-		class="flex flex-col gap-2"
-		use:enhance={() => {
-			cooking = true;
-			return async ({ update }) => {
-				await update();
-				order = [];
-				cooking = false;
-				alert('Envoyé!\nVotre commande à été envoyé au chefs!');
-			};
-		}}
-	>
-		<input type="hidden" name="order" value={JSON.stringify(order)} />
-		<input type="text" name="username" placeholder="Prénom" class="rounded-2xl p-4" />
+		{/each}
+		<form
+			method="POST"
+			class="flex flex-col gap-2"
+			use:enhance={() => {
+				cooking = true;
+				return async ({ update }) => {
+					await update();
+					order = [];
+					cooking = false;
+					alert('Envoyé!\nVotre commande à été envoyé au chefs!');
+				};
+			}}
+		>
+			<input type="hidden" name="order" value={JSON.stringify(order)} />
+			<input type="text" name="username" placeholder="Prénom" class="rounded-2xl p-4" />
 
-		<select name="delivery" class="rounded-2xl p-4" placeholder="Livraison...">
-			<option disabled={true}>Livraison...</option>
-			{#each categories as category}
-				<optgroup label={category.name}>
-					{#each category.addresses as addresse}
-						<option value={addresse.value}>{addresse.name}</option>
-					{/each}
-				</optgroup>
-			{/each}
-		</select>
+			<select name="delivery" class="rounded-2xl p-4" placeholder="Livraison...">
+				<option disabled={true}>Livraison...</option>
+				{#each categories as category}
+					<optgroup label={category.name}>
+						{#each category.addresses as addresse}
+							<option value={addresse.value}>{addresse.name}</option>
+						{/each}
+					</optgroup>
+				{/each}
+			</select>
 
-		<input
-			disabled={cooking}
-			type="submit"
-			value={cooking ? '📩 Acheminement...' : '🧑‍🍳 Envoyer en cuisine'}
-			class="rounded-2xl bg-blue-800 p-4 text-white disabled:opacity-50 disabled:grayscale-100"
-		/>
-	</form>
-	<a
-		href="/orderStatus"
-		class="flex justify-center rounded-2xl bg-blue-800 p-4 text-white disabled:opacity-50 disabled:grayscale-100"
-		>🚚 Voir le statut des commandes</a
-	>
-</div>
+			<input
+				disabled={cooking}
+				type="submit"
+				value={cooking ? '📩 Acheminement...' : '🧑‍🍳 Envoyer en cuisine'}
+				class="rounded-2xl bg-blue-800 p-4 text-white disabled:opacity-50 disabled:grayscale-100"
+			/>
+		</form>
+		<a
+			href="/orderStatus"
+			class="flex justify-center rounded-2xl bg-blue-800 p-4 text-white disabled:opacity-50 disabled:grayscale-100"
+			>🚚 Voir le statut des commandes</a
+		>
+	</div>
+{/if}

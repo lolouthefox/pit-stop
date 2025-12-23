@@ -1,11 +1,18 @@
 import type { Actions } from './$types';
 import { sendMessage } from '$lib/server/tg';
 import { v4 as uuidv4 } from 'uuid';
+import type { PageServerLoad } from './$types';
+import { getKitchenStatus } from '$lib/server/kitchenStatus';
 
 export interface OrderItem {
     itemId: string;
     amount: number;
 }
+
+export const load: PageServerLoad = async () => {
+    const kitchenStatus = getKitchenStatus();
+    return { kitchenStatus };
+};
 
 export const actions: Actions = {
     default: async ({ request }) => {
