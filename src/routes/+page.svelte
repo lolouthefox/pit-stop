@@ -94,7 +94,7 @@
 {#if kitchenOpen === false}
 	<div class="flex h-screen flex-col items-center justify-center gap-4 p-4 text-center">
 		<span class="text-5xl">🍳</span>
-		<span>La cuisine est fermé!</span>
+		<span>La cuisine est fermée !</span>
 	</div>
 {:else}
 	<div class="flex flex-col gap-2 p-4">
