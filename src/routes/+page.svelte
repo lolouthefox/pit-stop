@@ -81,7 +81,11 @@
 			style="background-image: url('{item.image}');"
 		>
 			<div class="flex items-center gap-4 bg-white/75 p-4 backdrop-blur-2xl">
-				<img src={item.image} alt={item.name} class="h-14 w-14 rounded-sm" />
+				<img
+					src={item.image}
+					alt={item.name}
+					class="h-14 w-14 rounded-sm object-cover object-center"
+				/>
 				<div class="flex flex-1 flex-col justify-center">
 					<span class="text-base font-bold">{item.name}</span>
 					<span class="text-xs text-black/75">{item.desc}</span>
