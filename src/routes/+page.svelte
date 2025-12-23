@@ -177,7 +177,7 @@
 		>
 			{#if order.length >= 1}
 				<code class="mt-4 mb-4 rounded-2xl border bg-black/5 p-4">
-					Veuillez ajouter des éléments au panier avant de commander. ===== VOTRE COMMANDE =====
+					===== VOTRE COMMANDE =====
 					<br />
 					{order.length === 1 ? 'Article' : 'Articles'} dans votre commande:
 					{#each order as item}
