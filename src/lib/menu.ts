@@ -184,14 +184,14 @@ export const menu: MenuItem[] = [
         image: '/assets/pepito.webp',
         category: MenuCategory.Gouter
     },
-    {
-        id: 'ferrero-rocher',
-        name: 'Ferrero Rocher',
-        price: 2,
-        desc: "Délicieux Ferrero Rocher.",
-        image: '/assets/ferrero.webp',
-        category: MenuCategory.Snacks
-    },
+    // {
+    //     id: 'ferrero-rocher',
+    //     name: 'Ferrero Rocher',
+    //     price: 2,
+    //     desc: "Délicieux Ferrero Rocher.",
+    //     image: '/assets/ferrero.webp',
+    //     category: MenuCategory.Snacks
+    // },
     {
         id: 'papillote-chocolat',
         name: 'Papillote Chocolat',
