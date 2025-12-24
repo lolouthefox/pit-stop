@@ -9,12 +9,13 @@ export type MenuItem = {
     id: string;
     name: string;
     price: number;
-    category: MenuCategory;
+    category: string;
 
-    desc?: string;
-    image?: string;
+    desc: string;
+    image: string;
 };
 
+// Menu is now loaded from the database, not static
 export const menu: MenuItem[] = [
     {
         id: 'jus-orange-pressée',

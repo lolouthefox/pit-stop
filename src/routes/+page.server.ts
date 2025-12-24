@@ -3,6 +3,8 @@ import { sendMessage } from '$lib/server/tg';
 import { v4 as uuidv4 } from 'uuid';
 import type { PageServerLoad } from './$types';
 import { getKitchenStatus } from '$lib/server/kitchenStatus';
+import { db } from '$lib/server/db';
+import { menuItems } from '$lib/server/db/schema';
 
 export interface OrderItem {
     itemId: string;
@@ -11,7 +13,18 @@ export interface OrderItem {
 
 export const load: PageServerLoad = async () => {
     const kitchenStatus = await getKitchenStatus();
-    return { kitchenStatus };
+    const items = await db.select().from(menuItems);
+
+    const menu = items.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        category: item.category,
+        desc: item.description,
+        image: item.imageUrl
+    }));
+
+    return { kitchenStatus, menu };
 };
 
 export const actions: Actions = {

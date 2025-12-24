@@ -11,3 +11,13 @@ export const kitchenStatus = pgTable('kitchen_status', {
     isOpen: boolean('is_open').notNull().default(false),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow()
 });
+
+export const menuItems = pgTable('menu_items', {
+    id: text('id').primaryKey(),
+    name: text('name').notNull(),
+    price: integer('price').notNull(),
+    description: text('description').notNull(),
+    imageUrl: text('image_url').notNull(),
+    category: text('category').notNull(),
+    unavailable: boolean('unavailable').notNull().default(false)
+});

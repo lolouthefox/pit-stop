@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import IconButton from '$lib/comps/IconButton.svelte';
 	import { categories } from '$lib/deliveryAddresses';
-	import { MenuCategory, menu, type MenuItem } from '$lib/menu';
+	import { MenuCategory, type MenuItem } from '$lib/menu';
 	import { onMount } from 'svelte';
 	import { type OrderItem } from './+page.server';
 	import { goto } from '$app/navigation';
@@ -10,8 +10,9 @@
 	let cooking = $state(false);
 	let { form, data } = $props();
 	let order: OrderItem[] = $state([]);
-	const categoryTabs = Object.values(MenuCategory);
-	let selectedCategory: 'ALL' | MenuCategory = $state('ALL');
+	let menu: MenuItem[] = $derived(data.menu ?? []);
+	const categoryTabs = $derived(Array.from(new Set(menu.map((item) => item.category))));
+	let selectedCategory: string = $state('ALL');
 	const filteredMenu = $derived(
 		selectedCategory === 'ALL' ? menu : menu.filter((item) => item.category === selectedCategory)
 	);
