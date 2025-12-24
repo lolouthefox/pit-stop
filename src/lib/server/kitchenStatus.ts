@@ -3,7 +3,6 @@ import { db } from "$lib/server/db";
 import { kitchenStatus } from "$lib/server/db/schema";
 import { eq } from "drizzle-orm";
 
-let sentStatusMessage = false;
 
 export async function openKitchen() {
     await db.insert(kitchenStatus)
@@ -24,11 +23,6 @@ export async function closeKitchen() {
 }
 
 export async function getKitchenStatus() {
-    if (!sentStatusMessage) {
-        await sendStatusMessage();
-        sentStatusMessage = true;
-    }
-
     const result = await db.select()
         .from(kitchenStatus)
         .where(eq(kitchenStatus.id, 1))
@@ -44,7 +38,7 @@ export async function getKitchenStatus() {
     return result[0].isOpen ? 'open' : 'closed';
 }
 
-async function sendStatusMessage() {
+export async function sendStatusMessage() {
     await sendMessage("Server Démarré. N'oubliez pas d'ouvrir la cuisine!");
 }
 
