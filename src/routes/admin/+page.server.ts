@@ -1,16 +1,16 @@
 import { HARDCODED_PASSWORD } from '$lib/server/admin';
 import { redirect } from '@sveltejs/kit';
+import { db } from '$lib/server/db';
+import { menuItems } from '$lib/server/db/schema';
 
 export async function load({ cookies }) {
     const passwordCookie = cookies.get('password');
 
     if (passwordCookie !== HARDCODED_PASSWORD) {
-        // Delete the invalid cookie
         cookies.delete('password', { path: '/' });
-        // Redirect to /admin/auth
-        redirect(302, '/admin/auth');
+        throw redirect(307, '/admin/auth');
     }
 
-    // Continue with the load function if the password is valid
-    return {};
+    const items = await db.select().from(menuItems);
+    return { items };
 }

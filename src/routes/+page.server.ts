@@ -38,7 +38,7 @@ export const actions: Actions = {
         const orderRaw = String(data.get('order') ?? []);
         const order: OrderItem[] = JSON.parse(orderRaw);
 
-        const time = `${new Date().getHours()}h${new Date().getMinutes()}`;
+        const time = new Date().toLocaleString('fr-FR', { timeZone: 'Europe/Paris', hour: '2-digit', minute: '2-digit', hour12: false }).replace(':', 'h');
 
         let text = `<b>From:</b> ${escapeHtml(username)}\n`;
         text += `<b>Delivery:</b> ${escapeHtml(delivery)}\n`;

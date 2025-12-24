@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import IconButton from '$lib/comps/IconButton.svelte';
 	import { categories } from '$lib/deliveryAddresses';
+	import CategoryTabs from '$lib/comps/CategoryTabs.svelte';
 	import { type MenuItem } from '$lib/menu';
 	import { onMount } from 'svelte';
 	import { type OrderItem } from './+page.server';
@@ -81,21 +82,13 @@
 		return false;
 	}
 
-	let kitchenOpen: null | boolean = $derived(null);
+	let kitchenOpen: boolean = $derived(data.kitchenStatus === 'open' ? true : false);
 	let featuredItem: MenuItem | null = $state(null);
 	onMount(async () => {
 		// Pick a random menu item on the client.
 		if (menu.length > 0) {
 			const idx = Math.floor(Math.random() * menu.length);
 			featuredItem = menu[idx];
-		}
-
-		const res = await fetch('/api/kitchenStatus');
-		if (res.ok) {
-			const data = await res.json();
-			kitchenOpen = data.status === 'open';
-		} else {
-			kitchenOpen = false;
 		}
 	});
 </script>
@@ -104,10 +97,10 @@
 	<title>Menu - Pit Stop</title>
 </svelte:head>
 
-{#if !kitchenOpen}
+{#if kitchenOpen === false}
 	<div class="z-50 flex h-screen flex-col items-center justify-center gap-4 p-4 text-center">
 		<span class="text-5xl">🍳</span>
-		<span>{kitchenOpen === false ? 'La cuisine est fermée !' : 'Chargement...'}</span>
+		<span>La cuisine est fermée !</span>
 	</div>
 {:else}
 	<div class="flex items-center justify-between p-4">
@@ -174,39 +167,23 @@
 			</div>
 		</div>
 	</div>
-	<div class="flex flex-col gap-2 p-4">
-		<div
-			class="sticky top-0 z-10 -mx-4 -mt-4 mb-2 flex gap-2 overflow-x-auto bg-white/85 px-4 py-3 backdrop-blur"
-		>
-			<button
-				type="button"
-				onclick={() => {
-					selectedCategory = 'ALL';
-				}}
-				class={`rounded-full px-3 py-2 text-sm font-semibold whitespace-nowrap shadow-sm transition ${selectedCategory === 'ALL' ? 'bg-red-800 text-white' : 'bg-white text-black/70 ring-1 ring-black/10'}`}
-			>
-				Tout
-			</button>
-			{#each categoryTabs as tab}
-				<button
-					type="button"
-					onclick={() => {
-						selectedCategory = tab;
-					}}
-					class={`rounded-full px-3 py-2 text-sm font-semibold whitespace-nowrap shadow-sm transition ${selectedCategory === tab ? 'bg-red-800 text-white' : 'bg-white text-black/70 ring-1 ring-black/10'}`}
-				>
-					{tab}
-				</button>
-			{/each}
-		</div>
+	<CategoryTabs
+		categories={categoryTabs}
+		selected={selectedCategory}
+		onSelect={(value) => {
+			selectedCategory = value;
+		}}
+		allLabel="Tout"
+		allValue="ALL"
+	/>
+	<div class="flex flex-col">
 		{#each filteredMenu as item}
 			<div
-				class="items-center overflow-hidden rounded-2xl bg-cover bg-center {item.unavailable
+				class="items-center overflow-hidden border-b border-black/10 p-2 {item.unavailable
 					? 'opacity-50 grayscale-100'
 					: ''}"
-				style="background-image: url('{item.image}');"
 			>
-				<div class="flex items-center gap-4 bg-white/75 p-4 backdrop-blur-2xl">
+				<div class="flex items-center gap-4 bg-white/75 p-4">
 					<img
 						src={item.image}
 						alt={item.name}
@@ -246,14 +223,20 @@
 		{/each}
 		<form
 			method="POST"
-			class="flex flex-col gap-2"
+			class="flex flex-col gap-2 p-4 pb-2"
 			use:enhance={() => {
 				cooking = true;
 				return async ({ update }) => {
 					await update();
 					order = [];
 					cooking = false;
-					alert('Envoyé!\nVotre commande à été envoyé au chefs!');
+					if (
+						confirm(
+							'Envoyé!\nVotre commande à été envoyé au chefs!\n\nVoulez-vous suivre votre livraison?'
+						)
+					) {
+						goto('/orderStatus');
+					}
 				};
 			}}
 		>
@@ -297,20 +280,21 @@
 				class="rounded-2xl bg-red-800 p-4 text-white disabled:opacity-50 disabled:grayscale-100"
 			/>
 		</form>
-		<button
-			class="rounded-2xl bg-red-800 p-4 text-white disabled:opacity-50 disabled:grayscale-100"
-			onclick={() => {
-				order = [];
-			}}
-			disabled={order.length === 0}
-		>
-			Annuler la commande
-		</button>
-		<a
-			href="/orderStatus"
-			class="mt-4 flex justify-center rounded-2xl bg-red-800 p-4 text-white disabled:opacity-50 disabled:grayscale-100"
-			>🚚 Voir le statut des commandes</a
-		>
+		<div class="px-4">
+			<button
+				class="w-full rounded-2xl bg-red-800 p-4 text-white disabled:opacity-50 disabled:grayscale-100"
+				onclick={() => {
+					order = [];
+				}}
+				disabled={order.length === 0}
+			>
+				Annuler la commande
+			</button>
+			<a
+				href="/admin"
+				class="my-8 flex justify-center rounded-2xl border border-red-800 bg-red-100 p-4 disabled:opacity-50 disabled:grayscale-100"
+				>🔐 Administrateur</a
+			>
+		</div>
 	</div>
 {/if}
-<a href="/admin">🔐 Administrateur</a>
