@@ -120,7 +120,7 @@
 							onclick={() => toggleAvailability(item)}
 							disabled={loading}
 						>
-							{item.unavailable ? 'Rendre disponible' : 'Rendre indisponible'}
+							{item.unavailable ? '✅' : '❌'}
 						</button>
 					</div>
 				</li>
