@@ -15,14 +15,16 @@ export const load: PageServerLoad = async () => {
     const kitchenStatus = await getKitchenStatus();
     const items = await db.select().from(menuItems);
 
-    const menu = items.map(item => ({
-        id: item.id,
-        name: item.name,
-        price: item.price,
-        category: item.category,
-        desc: item.description,
-        image: item.imageUrl
-    }));
+    const menu = items
+        .map(item => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            category: item.category,
+            desc: item.description,
+            image: item.imageUrl,
+            unavailable: item.unavailable
+        }));
 
     return { kitchenStatus, menu };
 };

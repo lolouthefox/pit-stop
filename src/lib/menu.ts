@@ -13,6 +13,7 @@ export type MenuItem = {
 
     desc: string;
     image: string;
+    unavailable?: boolean;
 };
 
 // Menu is now loaded from the database, not static

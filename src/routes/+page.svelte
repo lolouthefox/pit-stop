@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import IconButton from '$lib/comps/IconButton.svelte';
 	import { categories } from '$lib/deliveryAddresses';
-	import { MenuCategory, type MenuItem } from '$lib/menu';
+	import { type MenuItem } from '$lib/menu';
 	import { onMount } from 'svelte';
 	import { type OrderItem } from './+page.server';
 	import { goto } from '$app/navigation';
@@ -149,7 +149,7 @@
 				</div>
 				<button
 					class="rounded-full bg-red-800 px-4 py-2 font-semibold text-white disabled:opacity-50 disabled:grayscale-100"
-					disabled={!featuredItem}
+					disabled={!featuredItem || featuredItem.unavailable}
 					onclick={() => {
 						if (featuredItem) {
 							if (!!isInCart(featuredItem)) {
@@ -162,7 +162,11 @@
 				>
 					{#if featuredItem}
 						{@const cartItem = isInCart(featuredItem)}
-						{cartItem ? `Retirer (${cartItem.amount})` : 'Commander'}
+						{cartItem
+							? `Retirer (${cartItem.amount})`
+							: featuredItem.unavailable
+								? 'Indisponible'
+								: 'Ajouter au panier'}
 					{:else}
 						Chargement...
 					{/if}
@@ -197,7 +201,9 @@
 		</div>
 		{#each filteredMenu as item}
 			<div
-				class="items-center overflow-hidden rounded-2xl bg-cover bg-center"
+				class="items-center overflow-hidden rounded-2xl bg-cover bg-center {item.unavailable
+					? 'opacity-50 grayscale-100'
+					: ''}"
 				style="background-image: url('{item.image}');"
 			>
 				<div class="flex items-center gap-4 bg-white/75 p-4 backdrop-blur-2xl">
@@ -208,7 +214,9 @@
 					/>
 					<div class="flex flex-1 flex-col justify-center">
 						<span class="text-base font-bold">{item.name}</span>
-						<span class="text-xs text-black/75">{item.desc}</span>
+						<span class="text-xs text-black/75"
+							>{item.unavailable ? 'INDISPONIBLE' : item.desc}</span
+						>
 					</div>
 					{#if isInCart(item)}
 						{@const cartItem = isInCart(item)}
@@ -227,9 +235,10 @@
 						</div>
 					{:else}
 						<IconButton
+							disabled={item.unavailable}
 							onclick={() => {
 								addToCart(item);
-							}}>🛒</IconButton
+							}}>{item.unavailable ? '❌' : '🛒'}</IconButton
 						>
 					{/if}
 				</div>
@@ -304,3 +313,4 @@
 		>
 	</div>
 {/if}
+<a href="/admin">🔐 Administrateur</a>
