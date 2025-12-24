@@ -5,6 +5,7 @@
 	import { MenuCategory, menu, type MenuItem } from '$lib/menu';
 	import { onMount } from 'svelte';
 	import { type OrderItem } from './+page.server';
+	import { goto } from '$app/navigation';
 
 	let cooking = $state(false);
 	let { form, data } = $props();
@@ -80,7 +81,14 @@
 	}
 
 	let kitchenOpen: null | boolean = $derived(null);
+	let featuredItem: MenuItem | null = $state(null);
 	onMount(async () => {
+		// Pick a random menu item on the client.
+		if (menu.length > 0) {
+			const idx = Math.floor(Math.random() * menu.length);
+			featuredItem = menu[idx];
+		}
+
 		const res = await fetch('/api/kitchenStatus');
 		if (res.ok) {
 			const data = await res.json();
@@ -91,12 +99,76 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Menu - Pit Stop</title>
+</svelte:head>
+
 {#if !kitchenOpen}
-	<div class="flex h-screen flex-col items-center justify-center gap-4 p-4 text-center">
+	<div class="z-50 flex h-screen flex-col items-center justify-center gap-4 p-4 text-center">
 		<span class="text-5xl">🍳</span>
 		<span>{kitchenOpen === false ? 'La cuisine est fermée !' : 'Chargement...'}</span>
 	</div>
 {:else}
+	<div class="flex items-center justify-between p-4">
+		<IconButton
+			makeBig
+			onclick={() => {
+				window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+			}}>🛒</IconButton
+		>
+		<img src="/logo.png" alt="Pit Stop Logo" class="mx-auto my-4 h-32 w-auto" />
+		<IconButton
+			makeBig
+			onclick={() => {
+				goto('/orderStatus');
+			}}>🚚</IconButton
+		>
+	</div>
+
+	<div
+		class="m-4 overflow-hidden rounded-2xl bg-cover bg-center shadow-lg"
+		style={`background-image: url('${featuredItem?.image ?? '/assets/ferrero.webp'}');`}
+	>
+		<div class="flex h-full flex-col gap-4 bg-white/75 p-4 backdrop-blur-md">
+			<img
+				src={featuredItem?.image}
+				alt={featuredItem?.name ?? 'Chargement...'}
+				class="mb-2 h-40 w-40 rounded-lg object-cover object-center"
+			/>
+			<div class="flex w-full gap-4">
+				<div class="flex flex-1 flex-col justify-center">
+					<span class="text-xl font-bold">Pour vous...</span>
+					<span class="text-md text-black/75">
+						{#if featuredItem}
+							{featuredItem.name}
+						{:else}
+							Chargement...
+						{/if}
+					</span>
+				</div>
+				<button
+					class="rounded-full bg-red-800 px-4 py-2 font-semibold text-white disabled:opacity-50 disabled:grayscale-100"
+					disabled={!featuredItem}
+					onclick={() => {
+						if (featuredItem) {
+							if (!!isInCart(featuredItem)) {
+								removeFromCart(featuredItem);
+							} else {
+								addToCart(featuredItem);
+							}
+						}
+					}}
+				>
+					{#if featuredItem}
+						{@const cartItem = isInCart(featuredItem)}
+						{cartItem ? `Retirer (${cartItem.amount})` : 'Commander'}
+					{:else}
+						Chargement...
+					{/if}
+				</button>
+			</div>
+		</div>
+	</div>
 	<div class="flex flex-col gap-2 p-4">
 		<div
 			class="sticky top-0 z-10 -mx-4 -mt-4 mb-2 flex gap-2 overflow-x-auto bg-white/85 px-4 py-3 backdrop-blur"
@@ -106,7 +178,7 @@
 				onclick={() => {
 					selectedCategory = 'ALL';
 				}}
-				class={`rounded-full px-3 py-2 text-sm font-semibold whitespace-nowrap shadow-sm transition ${selectedCategory === 'ALL' ? 'bg-blue-800 text-white' : 'bg-white text-black/70 ring-1 ring-black/10'}`}
+				class={`rounded-full px-3 py-2 text-sm font-semibold whitespace-nowrap shadow-sm transition ${selectedCategory === 'ALL' ? 'bg-red-800 text-white' : 'bg-white text-black/70 ring-1 ring-black/10'}`}
 			>
 				Tout
 			</button>
@@ -116,7 +188,7 @@
 					onclick={() => {
 						selectedCategory = tab;
 					}}
-					class={`rounded-full px-3 py-2 text-sm font-semibold whitespace-nowrap shadow-sm transition ${selectedCategory === tab ? 'bg-blue-800 text-white' : 'bg-white text-black/70 ring-1 ring-black/10'}`}
+					class={`rounded-full px-3 py-2 text-sm font-semibold whitespace-nowrap shadow-sm transition ${selectedCategory === tab ? 'bg-red-800 text-white' : 'bg-white text-black/70 ring-1 ring-black/10'}`}
 				>
 					{tab}
 				</button>
@@ -212,7 +284,7 @@
 				disabled={cooking}
 				type="submit"
 				value={cooking ? '📩 Acheminement...' : '🧑‍🍳 Envoyer en cuisine'}
-				class="rounded-2xl bg-blue-800 p-4 text-white disabled:opacity-50 disabled:grayscale-100"
+				class="rounded-2xl bg-red-800 p-4 text-white disabled:opacity-50 disabled:grayscale-100"
 			/>
 		</form>
 		<button
@@ -226,7 +298,7 @@
 		</button>
 		<a
 			href="/orderStatus"
-			class="mt-4 flex justify-center rounded-2xl bg-blue-800 p-4 text-white disabled:opacity-50 disabled:grayscale-100"
+			class="mt-4 flex justify-center rounded-2xl bg-red-800 p-4 text-white disabled:opacity-50 disabled:grayscale-100"
 			>🚚 Voir le statut des commandes</a
 		>
 	</div>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 
 	let status: string = $state('Chargement...');
@@ -74,6 +75,9 @@
 
 {#if orderStatuses.length > 0}
 	<div class="m-4 flex flex-col gap-4">
+		<div class="flex w-full justify-center">
+			{@render goBackButton()}
+		</div>
 		{#each orderStatuses as order, i (order.id)}
 			<div class="flex flex-col gap-2 rounded-2xl border border-black/25 p-4 shadow-md">
 				<div><strong>Livraison {i + 1}</strong></div>
@@ -105,5 +109,17 @@
 	<div class="flex h-screen flex-col items-center justify-center gap-4 p-4 text-center">
 		<span class="text-5xl">🍳</span>
 		<span>{status}</span>
+		{@render goBackButton()}
 	</div>
 {/if}
+
+{#snippet goBackButton()}
+	<button
+		class="rounded-full bg-red-800 px-4 py-2 font-semibold text-white disabled:opacity-50 disabled:grayscale-100"
+		onclick={() => {
+			goto('/');
+		}}
+	>
+		⬅️ Retour au menu
+	</button>
+{/snippet}
