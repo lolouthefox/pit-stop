@@ -124,18 +124,18 @@ export const menu: MenuItem[] = [
         id: 'burger-special',
         name: 'Burger Spécial',
         price: 12,
-        desc: "Burger spécial avec ingrédients frais et savoureux. AVEC CADEAU !",
+        desc: "Burger spécial confectionné avec 2 chips, de la sauce, de la salade et du fromage.",
         image: '/assets/burger.webp',
         category: MenuCategory.Snacks
     },
-    {
-        id: 'pizza-margherita',
-        name: 'Pizza Margherita',
-        price: 9.5,
-        desc: "Pizza Margherita avec ingrédients frais et savoureux.",
-        image: '/assets/pizza.webp',
-        category: MenuCategory.Snacks
-    },
+    // {
+    //     id: 'pizza-margherita',
+    //     name: 'Pizza Margherita',
+    //     price: 9.5,
+    //     desc: "Pizza Margherita avec ingrédients frais et savoureux.",
+    //     image: '/assets/pizza.webp',
+    //     category: MenuCategory.Snacks
+    // },
     {
         id: 'crepe-whaou',
         name: 'Crêpe Whaou',
