@@ -8,7 +8,7 @@ export async function load({ cookies }) {
 
     if (passwordCookie !== HARDCODED_PASSWORD) {
         cookies.delete('password', { path: '/' });
-        throw redirect(307, '/admin/auth');
+        throw redirect(308, '/admin/auth');
     }
 
     const items = await db.select().from(menuItems);

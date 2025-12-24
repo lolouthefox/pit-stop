@@ -4,7 +4,7 @@ import { fail, redirect } from '@sveltejs/kit';
 export const load = async ({ cookies }) => {
     const password = cookies.get('password');
     if (password === HARDCODED_PASSWORD) {
-        redirect(307, '/admin');
+        redirect(308, '/admin');
     }
 };
 
@@ -16,7 +16,7 @@ export const actions = {
         if (password === HARDCODED_PASSWORD) {
             console.log('Admin logged in successfully');
             cookies.set('password', password, { path: '/' });
-            redirect(307, '/admin');
+            redirect(308, '/admin');
         } else {
             console.log('Admin failed to log in');
         }
