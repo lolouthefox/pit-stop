@@ -190,7 +190,7 @@ export const menu: MenuItem[] = [
         price: 2,
         desc: "Délicieux Ferrero Rocher.",
         image: '/assets/ferrero.webp',
-        category: MenuCategory.Gouter
+        category: MenuCategory.Snacks
     },
     {
         id: 'papillote-chocolat',
@@ -198,6 +198,14 @@ export const menu: MenuItem[] = [
         price: 1.5,
         desc: "Délicieuse papillote au chocolat.",
         image: '/assets/papillote.webp',
-        category: MenuCategory.Gouter
+        category: MenuCategory.Snacks
+    },
+    {
+        id: 'papillote-guimauve',
+        name: 'Papillote Guimauve',
+        price: 1.5,
+        desc: "Délicieuse papillote au coeur guimauve.",
+        image: '/assets/papillote-gui.jpg',
+        category: MenuCategory.Snacks
     },
 ];
