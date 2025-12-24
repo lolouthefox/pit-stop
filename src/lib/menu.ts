@@ -21,7 +21,7 @@ export const menu: MenuItem[] = [
         name: 'Orange Fraîchement Pressée',
         price: 3,
         desc: "Jus d'orange fraîchement pressé pour bien commencer la journée !",
-        image: '/assets/orange.jpg',
+        image: '/assets/orange.webp',
         category: MenuCategory.Breakfast
     },
     {
@@ -37,7 +37,7 @@ export const menu: MenuItem[] = [
         name: 'Cappuccino',
         price: 3,
         desc: "Un cappuccino crémeux avec une mousse de lait onctueuse.",
-        image: '/assets/cappuccino.jpg',
+        image: '/assets/cappuccino.webp',
         category: MenuCategory.Breakfast
     },
     {
@@ -45,7 +45,7 @@ export const menu: MenuItem[] = [
         name: 'Chocolat Chaud Milka',
         price: 3,
         desc: "Un chocolat chaud riche et crémeux, parfait pour se réchauffer.",
-        image: '/assets/hot-chocolate.jpg',
+        image: '/assets/hot-chocolate.webp',
         category: MenuCategory.Breakfast
     },
     {
@@ -53,7 +53,7 @@ export const menu: MenuItem[] = [
         name: 'Ice Tea Pêche',
         price: 2,
         desc: "Rafraîchissant ice tea à la pêche, parfait pour une pause sucrée.",
-        image: '/assets/ice-tea.jpg',
+        image: '/assets/ice-tea.webp',
         category: MenuCategory.Drinks
     },
     {
@@ -85,7 +85,7 @@ export const menu: MenuItem[] = [
         name: 'Sprite',
         price: 2,
         desc: "Boisson gazeuse au citron-lime, idéale pour se rafraîchir.",
-        image: '/assets/sprite.jpeg',
+        image: '/assets/sprite.webp',
         category: MenuCategory.Drinks
     },
     {
@@ -93,7 +93,7 @@ export const menu: MenuItem[] = [
         name: 'Eau Plate',
         price: 0.5,
         desc: "Eau plate fraîche et pure, idéale pour s'hydrater.",
-        image: '/assets/water.jpg',
+        image: '/assets/water.webp',
         category: MenuCategory.Drinks
     },
     {
@@ -109,7 +109,7 @@ export const menu: MenuItem[] = [
         name: 'Brownie Chocolat',
         price: 3,
         desc: "Délicieux brownie au chocolat, parfait pour une pause gourmande.",
-        image: '/assets/brownie.jpg',
+        image: '/assets/brownie.webp',
         category: MenuCategory.Gouter
     },
     {
@@ -133,7 +133,7 @@ export const menu: MenuItem[] = [
         name: 'Pizza Margherita',
         price: 9.5,
         desc: "Pizza Margherita avec ingrédients frais et savoureux.",
-        image: '/assets/pizza.jpg',
+        image: '/assets/pizza.webp',
         category: MenuCategory.Snacks
     },
     {
@@ -141,7 +141,7 @@ export const menu: MenuItem[] = [
         name: 'Crêpe Whaou',
         price: 5,
         desc: "Délicieuse crêpe avec garnitures au choix, parfaite pour une pause gourmande.",
-        image: '/assets/whaou.jpeg',
+        image: '/assets/whaou.webp',
         category: MenuCategory.Gouter
     },
     {
@@ -157,7 +157,7 @@ export const menu: MenuItem[] = [
         name: 'BN Chocolat',
         price: 3,
         desc: "Délicieux BN au chocolat.",
-        image: '/assets/bn-ch.png',
+        image: '/assets/bn-ch.webp',
         category: MenuCategory.Gouter
     },
     {
@@ -173,7 +173,7 @@ export const menu: MenuItem[] = [
         name: 'Ourson Fraise',
         price: 2,
         desc: "Délicieux ourson à la fraise.",
-        image: '/assets/lulu.jpg',
+        image: '/assets/lulu.webp',
         category: MenuCategory.Gouter
     },
     {
@@ -181,7 +181,7 @@ export const menu: MenuItem[] = [
         name: 'Pépito Chocolat',
         price: 2,
         desc: "Délicieux Pépito au chocolat.",
-        image: '/assets/pepito.jpg',
+        image: '/assets/pepito.webp',
         category: MenuCategory.Gouter
     },
     {
@@ -189,7 +189,7 @@ export const menu: MenuItem[] = [
         name: 'Ferrero Rocher',
         price: 2,
         desc: "Délicieux Ferrero Rocher.",
-        image: '/assets/ferrero.avif',
+        image: '/assets/ferrero.webp',
         category: MenuCategory.Gouter
     },
     {
@@ -197,7 +197,7 @@ export const menu: MenuItem[] = [
         name: 'Papillote Chocolat',
         price: 1.5,
         desc: "Délicieuse papillote au chocolat.",
-        image: '/assets/papillote.jpg',
+        image: '/assets/papillote.webp',
         category: MenuCategory.Gouter
     },
 ];
