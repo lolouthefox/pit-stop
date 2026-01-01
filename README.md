@@ -4,6 +4,8 @@ This app allows you to take orders and manage them from a Telegram chat. There i
 
 To set this up we I Bun, but I'm pretty sure you can easily make it work with npm or yarn as well. I'd also like to note that this was built in a very tight timeline (2 days) and the project is quite rough for now (barely any comments, a lot of AI code, lack of propper components, etc).
 
+The project is only in French for now.
+
 ## Setting up
 
 You need to setup a database in [Neon](https://neon.com/) and copy the connection string to your `.env` file.
