@@ -1,38 +1,49 @@
-# sv
+# Pit Stop
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+This app allows you to take orders and manage them from a Telegram chat. There is currently a pricing system but it doesn't affect the ordering process in any ways and is not really implemented.
 
-## Creating a project
+To set this up we I Bun, but I'm pretty sure you can easily make it work with npm or yarn as well. I'd also like to note that this was built in a very tight timeline (2 days) and the project is quite rough for now (barely any comments, a lot of AI code, lack of propper components, etc).
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Setting up
 
-```sh
-# create a new project in the current directory
-npx sv create
+You need to setup a database in [Neon](https://neon.com/) and copy the connection string to your `.env` file.
 
-# create a new project in my-app
-npx sv create my-app
+You will also need to setup the other environment variables as described in `.env.example`.
+
+If you want to deploy the fastest way is by forking the project and using [Vercel](https://vercel.com/) to deploy the project. Otherwise you can look for "Building" section at the bottom of the `README.md`.
+
+Finally you need to send the schema to the database using this command:
+```bash
+bun run db:push
 ```
+Note that the database has no data and it's your job to fill it in. There are already some pictures in the `/static` directory that I use for my personal use. But I still recommend forking and changing the pictures.
+
+Cheers!
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
 ```sh
-npm run dev
+# install dependencies
+bun install
+
+# start the server
+bun run dev
 
 # or start the server and open the app in a new browser tab
-npm run dev -- --open
+bun run dev --open
 ```
 
 ## Building
 
-To create a production version of your app:
+To create a production version of the app:
 
 ```sh
-npm run build
+bun run build
 ```
 
-You can preview the production build with `npm run preview`.
+You can preview the production build with `bun run preview`.
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+> To deploy the app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+
+## Contribution
+Don't hesitate to ask on my [Telegram](https://t.me/LolouTheFox) if you want to help. Or you can of course use GitHub issues and create PRs!
