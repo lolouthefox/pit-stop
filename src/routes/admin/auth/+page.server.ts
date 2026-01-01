@@ -1,9 +1,9 @@
-import { HARDCODED_PASSWORD } from '$lib/server/admin';
+import { ADMIN_PASSWORD } from '$env/static/private';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const load = async ({ cookies }) => {
     const password = cookies.get('password');
-    if (password === HARDCODED_PASSWORD) {
+    if (password === ADMIN_PASSWORD) {
         redirect(308, '/admin');
     }
 };
@@ -13,7 +13,7 @@ export const actions = {
         const data = await request.formData();
         const password = data.get('password');
 
-        if (password === HARDCODED_PASSWORD) {
+        if (password === ADMIN_PASSWORD) {
             console.log('Admin logged in successfully');
             cookies.set('password', password, { path: '/' });
             redirect(308, '/admin');

@@ -50,6 +50,15 @@
 			error = e?.message ?? String(e);
 		}
 	}
+
+	async function sendMessage() {
+		const res = await fetch('/admin/api/send-msg', {
+			method: 'GET'
+		});
+		if (!res.ok) {
+			throw new Error('Failed to send message');
+		}
+	}
 </script>
 
 <section class="space-y-4">
@@ -72,6 +81,12 @@
 	{:else if visibleItems.length === 0}
 		<p class="text-slate-600">Aucun élément trouvé.</p>
 	{:else}
+		<button
+			onclick={sendMessage}
+			class="rounded-2xl bg-red-800 p-4 text-white disabled:opacity-50 disabled:grayscale-100"
+		>
+			Envoyer le message ouverture/fermeture de la cuisine
+		</button>
 		<div class="flex flex-col">
 			{#each visibleItems as item}
 				<div class="flex items-center justify-between border-b border-black/25 p-4">
