@@ -1,18 +1,18 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import IconButton from '$lib/comps/IconButton.svelte';
 	import { categories } from '$lib/deliveryAddresses';
 	import CategoryTabs from '$lib/comps/CategoryTabs.svelte';
 	import { type MenuItem } from '$lib/menu';
 	import { onMount } from 'svelte';
 	import { type OrderItem } from './+page.server';
-	import { goto } from '$app/navigation';
-	import { resolve } from '$app/paths';
 	import Header from '$lib/comps/Header.svelte';
 	import Featurette from '$lib/comps/Featurette.svelte';
+	import HorizontalItem from '$lib/comps/HorizontalItem.svelte';
+	import GridItem from '$lib/comps/GridItem.svelte';
 
+	let delivery: string = $state('');
 	let cooking = $state(false);
-	let { form, data } = $props();
+	let cartStep: 'review' | 'delivery' | 'complete' = $state('review');
+	let { data } = $props();
 
 	let order: OrderItem[] = $state([]);
 	let menu: MenuItem[] = $derived(data.menu ?? []);
@@ -21,26 +21,24 @@
 	const filteredMenu = $derived(
 		selectedCategory === 'ALL' ? menu : menu.filter((item) => item.category === selectedCategory)
 	);
+	let showCart = $state(false);
 
-	$effect(() => {
-		if (form?.orderId) {
-			const key = 'orderIds';
-			try {
-				// ensure localStorage is available (SSR guard)
-				if (typeof localStorage !== 'undefined') {
-					const raw = localStorage.getItem(key);
-					const ids: string[] = raw ? JSON.parse(raw) : [];
-					const id = String(form.orderId);
-					if (!ids.includes(id)) {
-						ids.push(id);
-						localStorage.setItem(key, JSON.stringify(ids));
-					}
-				}
-			} catch (e) {
-				console.error('unable to update localStorage orderIds', e);
+	async function sendCart() {
+		cooking = true;
+		try {
+			const response = await fetch('/api/order', {
+				method: 'POST',
+				body: JSON.stringify({ order, delivery, username: data.profile.username })
+			});
+			if (!response.ok) {
+				alert("Impossible d'envoyer le panier.");
 			}
+		} catch (e) {
+			alert("Impossible d'envoyer le panier:\n" + e);
+		} finally {
+			cooking = false;
 		}
-	});
+	}
 
 	/** Add an item to cart. */
 	function addToCart(item: MenuItem) {
@@ -101,146 +99,106 @@
 	<title>Menu - Pit Stop</title>
 </svelte:head>
 
-{#if kitchenOpen === false}
-	<div class="z-50 flex h-screen flex-col items-center justify-center gap-4 p-4 text-center">
-		<span class="text-5xl">🍳</span>
-		<span>La cuisine est fermée !</span>
-	</div>
-{:else}
-	<Header />
+<div class="{showCart ? 'pointer-events-none' : ''} fixed inset-0 overflow-y-scroll">
+	{#if kitchenOpen === false}
+		<div class="z-50 flex h-screen flex-col items-center justify-center gap-4 p-4 text-center">
+			<span class="text-5xl">🍳</span>
+			<span>La cuisine est fermée !</span>
+		</div>
+	{:else}
+		<Header />
 
-	{#if data.flags.featurette}
-		<Featurette {featuredItem} {isInCart} {removeFromCart} {addToCart} />
-	{/if}
+		{#if data.flags.featurette}
+			<Featurette {featuredItem} {isInCart} {removeFromCart} {addToCart} />
+		{/if}
 
-	<CategoryTabs
-		categories={categoryTabs}
-		selected={selectedCategory}
-		onSelect={(value) => {
-			selectedCategory = value;
-		}}
-		allLabel="Tout"
-		allValue="ALL"
-	/>
-	<div class="flex flex-col">
-		{#each filteredMenu as item (item.id)}
-			<div
-				class="items-center overflow-hidden border-b border-black/10 p-2 {item.unavailable
-					? 'opacity-50 grayscale-100'
-					: ''}"
-			>
-				<div class="flex items-center gap-4 bg-white/75 p-4">
-					<img
-						src={item.image}
-						alt={item.name}
-						class="h-14 w-14 rounded-sm object-cover object-center"
-					/>
-					<div class="flex flex-1 flex-col justify-center">
-						<span class="text-base font-bold">{item.name}</span>
-						<span class="text-xs text-black/75"
-							>{item.unavailable ? 'INDISPONIBLE' : item.desc}</span
-						>
-					</div>
-					{#if isInCart(item)}
-						{@const cartItem = isInCart(item)}
-						<div class="flex items-center justify-center gap-4">
-							<IconButton
-								onclick={() => {
-									addToCart(item);
-								}}>➕</IconButton
-							>
-							{cartItem ? cartItem.amount : '?'}
-							<IconButton
-								onclick={() => {
-									removeFromCart(item);
-								}}>➖</IconButton
-							>
-						</div>
-					{:else}
-						<IconButton
-							disabled={item.unavailable}
-							onclick={() => {
-								addToCart(item);
-							}}>{item.unavailable ? '❌' : '🛒'}</IconButton
-						>
-					{/if}
-				</div>
-			</div>
-		{/each}
-		<form
-			method="POST"
-			class="flex flex-col gap-2 p-4 pb-2"
-			use:enhance={() => {
-				cooking = true;
-				return async ({ update }) => {
-					await update();
-					order = [];
-					cooking = false;
-					if (
-						confirm(
-							'Envoyé!\nVotre commande à été envoyé au chefs!\n\nVoulez-vous suivre votre livraison?'
-						)
-					) {
-						goto(resolve('/orderStatus'));
-					}
-				};
+		<CategoryTabs
+			categories={categoryTabs}
+			selected={selectedCategory}
+			onSelect={(value) => {
+				selectedCategory = value;
 			}}
-		>
+			allLabel="Tout"
+			allValue="ALL"
+		/>
+		<div class="mb-32 grid grid-cols-2">
+			{#each filteredMenu as item (item.id)}
+				<GridItem {item} {isInCart} {removeFromCart} {addToCart} />
+			{/each}
 			{#if order.length >= 1}
-				<code class="mt-4 mb-4 rounded-2xl border bg-black/5 p-4">
-					===== VOTRE COMMANDE =====
-					<br />
-					{order.length === 1 ? 'Article' : 'Articles'} dans votre commande:
+				<button
+					class="fixed right-4 bottom-4 left-4 rounded-2xl bg-red-800 p-4 text-white"
+					onclick={() => {
+						cartStep = 'review';
+						showCart = true;
+					}}
+				>
+					Voir le panier • {order
+						.map((i) => i.amount)
+						.reduce((accumulator, currentValue) => accumulator + currentValue, 0)}
+				</button>
+			{/if}
+		</div>
+	{/if}
+</div>
+
+{#if showCart}
+	<div class="fixed inset-0 z-50 flex flex-col gap-4 bg-white">
+		<div class="flex w-full p-4">
+			<button
+				class="rounded-full bg-red-800 px-4 py-2 font-semibold text-white disabled:opacity-50 disabled:grayscale-100"
+				onclick={() => {
+					showCart = false;
+				}}
+			>
+				⬅️ Fermer
+			</button>
+		</div>
+		{#if cartStep === 'review'}
+			<div class="flex-1 overflow-y-scroll">
+				<div class="flex flex-col gap-4">
 					{#each order as item, i (i)}
 						{#each menu.filter((menuItem) => menuItem.id === item.itemId) as menuItem (menuItem.id)}
-							<br />
-							- {item.amount}x {menuItem.name}
+							<HorizontalItem item={menuItem} {isInCart} {removeFromCart} {addToCart} />
 						{/each}
 					{/each}
-					<br />
-					----
-					<br />
-					TOTAL: {order.length}
-					<br />
-					==========================
-				</code>
-			{/if}
-			<input type="hidden" name="order" value={JSON.stringify(order)} />
-			<input type="text" name="username" placeholder="Prénom" class="rounded-2xl p-4" />
-
-			<select name="delivery" class="rounded-2xl p-4" placeholder="Livraison...">
-				<option disabled={true}>Livraison...</option>
-				{#each categories as category, i (i)}
-					<optgroup label={category.name}>
-						{#each category.addresses as addresse, j (j)}
-							<option value={addresse.value}>{addresse.name}</option>
-						{/each}
-					</optgroup>
-				{/each}
-			</select>
-
-			<input
-				disabled={cooking}
-				type="submit"
-				value={cooking ? '📩 Acheminement...' : '🧑‍🍳 Envoyer en cuisine'}
-				class="rounded-2xl bg-red-800 p-4 text-white disabled:opacity-50 disabled:grayscale-100"
-			/>
-		</form>
-		<div class="px-4">
+				</div>
+			</div>
 			<button
-				class="w-full rounded-2xl bg-red-800 p-4 text-white disabled:opacity-50 disabled:grayscale-100"
+				class="mx-4 mb-4 rounded-2xl bg-red-800 p-4 text-white"
 				onclick={() => {
-					order = [];
+					cartStep = 'delivery';
 				}}
-				disabled={order.length === 0}
 			>
-				Annuler la commande
+				Suivant
 			</button>
-			<a
-				href={resolve('/admin')}
-				class="my-8 flex justify-center rounded-2xl border border-red-800 bg-red-100 p-4 disabled:opacity-50 disabled:grayscale-100"
-				>🔐 Administrateur</a
+		{:else if cartStep === 'delivery'}
+			<div class="flex flex-1 flex-col gap-2 p-4">
+				<select
+					name="delivery"
+					class="rounded-2xl p-4"
+					placeholder="Livraison..."
+					bind:value={delivery}
+				>
+					<option disabled={true}>Livraison...</option>
+					{#each categories as category, i (i)}
+						<optgroup label={category.name}>
+							{#each category.addresses as addresse, j (j)}
+								<option value={addresse.value}>{addresse.name}</option>
+							{/each}
+						</optgroup>
+					{/each}
+				</select>
+			</div>
+			<button
+				class="mx-4 mb-4 rounded-2xl bg-red-800 p-4 text-white disabled:opacity-50"
+				disabled={cooking}
+				onclick={() => {
+					sendCart();
+				}}
 			>
-		</div>
+				{cooking ? '📩 Acheminement...' : '🧑‍🍳 Envoyer en cuisine'}
+			</button>
+		{/if}
 	</div>
 {/if}

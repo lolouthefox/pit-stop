@@ -4,14 +4,8 @@
 	import IconButton from './IconButton.svelte';
 </script>
 
-<div class="flex items-center justify-between p-4">
-	<IconButton
-		makeBig
-		onclick={() => {
-			window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-		}}>🛒</IconButton
-	>
-	<img src="/logo.png" alt="Pit Stop Logo" class="mx-auto my-4 h-32 w-auto" />
+<div class="flex items-center justify-between p-4 py-0 pl-0">
+	<img src="/logo.png" alt="Pit Stop Logo" class=" h-32" />
 	<IconButton
 		makeBig
 		onclick={() => {
