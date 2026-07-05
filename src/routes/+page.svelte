@@ -7,9 +7,13 @@
 	import { onMount } from 'svelte';
 	import { type OrderItem } from './+page.server';
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
+	import Header from '$lib/comps/Header.svelte';
+	import Featurette from '$lib/comps/Featurette.svelte';
 
 	let cooking = $state(false);
 	let { form, data } = $props();
+
 	let order: OrderItem[] = $state([]);
 	let menu: MenuItem[] = $derived(data.menu ?? []);
 	const categoryTabs = $derived(Array.from(new Set(menu.map((item) => item.category))));
@@ -103,70 +107,12 @@
 		<span>La cuisine est fermée !</span>
 	</div>
 {:else}
-	<div class="flex items-center justify-between p-4">
-		<IconButton
-			makeBig
-			onclick={() => {
-				window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-			}}>🛒</IconButton
-		>
-		<img src="/logo.png" alt="Pit Stop Logo" class="mx-auto my-4 h-32 w-auto" />
-		<IconButton
-			makeBig
-			onclick={() => {
-				goto('/orderStatus');
-			}}>🚚</IconButton
-		>
-	</div>
+	<Header />
 
-	<div
-		class="m-4 overflow-hidden rounded-2xl bg-cover bg-center shadow-lg"
-		style={`background-image: url('${featuredItem?.image ?? '/assets/ferrero.webp'}');`}
-	>
-		<div class="flex h-full flex-col gap-4 bg-white/75 p-4 backdrop-blur-md">
-			<img
-				src={featuredItem?.image}
-				alt={featuredItem?.name ?? 'Chargement...'}
-				class="mb-2 h-40 w-40 rounded-lg object-cover object-center"
-			/>
-			<div class="flex w-full gap-4">
-				<div class="flex flex-1 flex-col justify-center">
-					<span class="text-xl font-bold">Pour vous...</span>
-					<span class="text-md text-black/75">
-						{#if featuredItem}
-							{featuredItem.name}
-						{:else}
-							Chargement...
-						{/if}
-					</span>
-				</div>
-				<button
-					class="rounded-full bg-red-800 px-4 py-2 font-semibold text-white disabled:opacity-50 disabled:grayscale-100"
-					disabled={!featuredItem || featuredItem.unavailable}
-					onclick={() => {
-						if (featuredItem) {
-							if (!!isInCart(featuredItem)) {
-								removeFromCart(featuredItem);
-							} else {
-								addToCart(featuredItem);
-							}
-						}
-					}}
-				>
-					{#if featuredItem}
-						{@const cartItem = isInCart(featuredItem)}
-						{cartItem
-							? `Retirer (${cartItem.amount})`
-							: featuredItem.unavailable
-								? 'Indisponible'
-								: 'Ajouter au panier'}
-					{:else}
-						Chargement...
-					{/if}
-				</button>
-			</div>
-		</div>
-	</div>
+	{#if data.flags.featurette}
+		<Featurette {featuredItem} {isInCart} {removeFromCart} {addToCart} />
+	{/if}
+
 	<CategoryTabs
 		categories={categoryTabs}
 		selected={selectedCategory}
@@ -177,7 +123,7 @@
 		allValue="ALL"
 	/>
 	<div class="flex flex-col">
-		{#each filteredMenu as item}
+		{#each filteredMenu as item (item.id)}
 			<div
 				class="items-center overflow-hidden border-b border-black/10 p-2 {item.unavailable
 					? 'opacity-50 grayscale-100'
@@ -235,7 +181,7 @@
 							'Envoyé!\nVotre commande à été envoyé au chefs!\n\nVoulez-vous suivre votre livraison?'
 						)
 					) {
-						goto('/orderStatus');
+						goto(resolve('/orderStatus'));
 					}
 				};
 			}}
@@ -245,8 +191,8 @@
 					===== VOTRE COMMANDE =====
 					<br />
 					{order.length === 1 ? 'Article' : 'Articles'} dans votre commande:
-					{#each order as item}
-						{#each menu.filter((menuItem) => menuItem.id === item.itemId) as menuItem}
+					{#each order as item, i (i)}
+						{#each menu.filter((menuItem) => menuItem.id === item.itemId) as menuItem (menuItem.id)}
 							<br />
 							- {item.amount}x {menuItem.name}
 						{/each}
@@ -264,9 +210,9 @@
 
 			<select name="delivery" class="rounded-2xl p-4" placeholder="Livraison...">
 				<option disabled={true}>Livraison...</option>
-				{#each categories as category}
+				{#each categories as category, i (i)}
 					<optgroup label={category.name}>
-						{#each category.addresses as addresse}
+						{#each category.addresses as addresse, j (j)}
 							<option value={addresse.value}>{addresse.name}</option>
 						{/each}
 					</optgroup>
@@ -291,7 +237,7 @@
 				Annuler la commande
 			</button>
 			<a
-				href="/admin"
+				href={resolve('/admin')}
 				class="my-8 flex justify-center rounded-2xl border border-red-800 bg-red-100 p-4 disabled:opacity-50 disabled:grayscale-100"
 				>🔐 Administrateur</a
 			>

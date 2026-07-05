@@ -5,16 +5,7 @@
 </script>
 
 <div class="mx-auto max-w-md p-8">
-	<form
-		method="POST"
-		use:enhance={() => {
-			loading = true;
-			return async ({ result }) => {
-				loading = false;
-			};
-		}}
-		class="flex flex-col gap-4"
-	>
+	<form method="POST" use:enhance class="flex flex-col gap-4">
 		<h1 class="text-2xl font-bold">Admin Authentication</h1>
 
 		<div class="flex flex-col gap-2">
