@@ -51,9 +51,11 @@ export const actions: Actions = {
 		text += `<b>Time:</b> ${escapeHtml(time)}\n\n`;
 		text += `<b>Items:</b>\n`;
 
+		const items = await db.select().from(menuItems);
 		for (let i = 0; i < order.length; i++) {
+			const itemName = items.find((item) => item.id === order[i].itemId)?.name ?? order[i].itemId;
 			const element = order[i];
-			text += `${element.amount}x <i>${escapeHtml(element.itemId)}</i>\n`;
+			text += `${element.amount}x <i>${escapeHtml(itemName)}</i>\n`;
 		}
 
 		const orderId: string = uuidv4();
