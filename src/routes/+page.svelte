@@ -38,6 +38,9 @@
 			if (!response.ok) {
 				alert("Impossible d'envoyer le panier.");
 			}
+			showCart = false;
+			order = [];
+			alert('Commande passé avec succès!');
 		} catch (e) {
 			alert("Impossible d'envoyer le panier:\n" + e);
 		} finally {
