@@ -114,7 +114,7 @@
 			<span>La cuisine est fermée !</span>
 		</div>
 	{:else}
-		<Header />
+		<Header avatarUrl={data.profile.avatarUrl} />
 
 		{#if data.flags.featurette}
 			<Featurette {featuredItem} {isInCart} {removeFromCart} {addToCart} />
