@@ -10,25 +10,25 @@ const deliveryAddresses = [
 	{
 		name: 'Rez-de-Chaussée',
 		addresses: [
-			{ value: 'RDC Cuisine', name: 'Cuisine', img: '/rooms/floorplan-1-kitchen.svg' },
-			{ value: 'RDC Salon', name: 'Salon', img: '/rooms/floorplan-1-living-room.svg' },
+			{ value: 'RDC Cuisine', name: 'Cuisine', img: '/rooms/floorplan-0-kitchen.svg' },
+			{ value: 'RDC Salon', name: 'Salon', img: '/rooms/floorplan-0-living-room.svg' },
 			{
 				value: 'RDC Salle à Manger',
 				name: 'Salle à Manger',
-				img: '/rooms/floorplan-1-dining-room.svg'
+				img: '/rooms/floorplan-0-dining-room.svg'
 			},
-			{ value: 'RDC Bureau', name: 'Bureau', img: '/rooms/floorplan-1-bureau.svg' },
-			{ value: 'RDC Salle de Bain', name: 'Salle de Bain', img: '/rooms/floorplan-1-bathroom.svg' },
-			{ value: 'RDC Studio', name: 'Studio', img: '/rooms/floorplan-1-studio.svg' },
-			{ value: 'RDC Verranda', name: 'Verranda', img: '/rooms/floorplan-1-verranda.svg' }
+			{ value: 'RDC Bureau', name: 'Bureau', img: '/rooms/floorplan-0-bureau.svg' },
+			{ value: 'RDC Salle de Bain', name: 'Salle de Bain', img: '/rooms/floorplan-0-bathroom.svg' },
+			{ value: 'RDC Studio', name: 'Studio', img: '/rooms/floorplan-0-studio.svg' },
+			{ value: 'RDC Verranda', name: 'Verranda', img: '/rooms/floorplan-0-verranda.svg' }
 		]
 	},
 	{
 		name: '1er Étage',
 		addresses: [
-			{ value: '1ER Chambre Jess', name: 'Chambre Jess', img: '/rooms/floorplan-2-jess.svg' },
-			{ value: '1ER Garde-robe', name: 'Garde-robe', img: '/rooms/floorplan-2-dressing-room.svg' },
-			{ value: '1ER Chambre Marido', name: 'Chambre Marido', img: '/rooms/floorplan-2-marido.svg' }
+			{ value: '1ER Chambre Jess', name: 'Chambre Jess', img: '/rooms/floorplan-1-jess.svg' },
+			{ value: '1ER Garde-robe', name: 'Garde-robe', img: '/rooms/floorplan-1-dressing-room.svg' },
+			{ value: '1ER Chambre Marido', name: 'Chambre Marido', img: '/rooms/floorplan-1-marido.svg' }
 		]
 	},
 	{
