@@ -1,6 +1,3 @@
-import type { Actions } from './$types';
-import { sendMessage } from '$lib/server/tg';
-import { v4 as uuidv4 } from 'uuid';
 import type { PageServerLoad } from './$types';
 import { getKitchenStatus } from '$lib/server/kitchenStatus';
 import { db } from '$lib/server/db';
@@ -32,6 +29,8 @@ export const load: PageServerLoad = async ({ cookies }) => {
 		image: item.imageUrl,
 		unavailable: item.unavailable
 	}));
+
+	console.log(profile);
 
 	return { kitchenStatus, menu, profile };
 };
