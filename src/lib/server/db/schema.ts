@@ -2,6 +2,7 @@ import { pgTable, text, timestamp, boolean, integer } from 'drizzle-orm/pg-core'
 
 export const orders = pgTable('orders', {
 	id: text('id').primaryKey(),
+	userId: text('user_id').notNull(),
 	status: text('status').notNull(),
 	updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow()
 });

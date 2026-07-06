@@ -1,7 +1,7 @@
 import { sendMessage } from '$lib/server/tg';
-import { v4 as uuidv4 } from 'uuid';
 import { db } from '$lib/server/db';
 import { menuItems } from '$lib/server/db/schema';
+import { createOrder } from '$lib/server/orders';
 
 export interface OrderItem {
 	itemId: string;
@@ -12,6 +12,7 @@ export const POST = async ({ request }) => {
 	const data = await request.json();
 
 	const username = String(data.username ?? 'Unknown');
+	const userId = String(data.userId ?? 'Unknown');
 	const delivery = String(data.delivery ?? 'Unknown');
 	const order: OrderItem[] = data.order ?? [];
 
@@ -36,14 +37,14 @@ export const POST = async ({ request }) => {
 		text += `${element.amount}x <i>${escapeHtml(itemName)}</i>\n`;
 	}
 
-	const orderId: string = uuidv4();
-	const res = await sendMessage(text, orderId);
+	const orderRow = await createOrder(userId);
+	const res = await sendMessage(text, orderRow.id);
 
 	if (!res || !res.success) {
 		return Response.json({ success: false, error: res?.error ?? 'failed' });
 	}
 
-	return Response.json({ success: true, orderId });
+	return Response.json({ success: true, orderId: orderRow.id });
 };
 
 function escapeHtml(s: string) {

@@ -7,27 +7,33 @@ const FINISHED_STATUSES = ['completed', 'cancelled'];
 const TEN_MINUTES_MS = 10 * 60 * 1000;
 
 async function cleanupFinishedOrders() {
-    const cutoff = new Date(Date.now() - TEN_MINUTES_MS);
-    await db.delete(orders).where(
-        and(inArray(orders.status, FINISHED_STATUSES), lt(orders.updatedAt, cutoff))
-    );
+	const cutoff = new Date(Date.now() - TEN_MINUTES_MS);
+	await db
+		.delete(orders)
+		.where(and(inArray(orders.status, FINISHED_STATUSES), lt(orders.updatedAt, cutoff)));
+}
+
+export async function createOrder(userId: string) {
+	const orderId: string = crypto.randomUUID();
+	await db.insert(orders).values({ id: orderId, status: 'pending', updatedAt: new Date(), userId });
+
+	await cleanupFinishedOrders();
+
+	return { id: orderId, status: 'pending' };
 }
 
 export async function updateOrderStatus(orderId: string, status: string) {
-    await db
-        .insert(orders)
-        .values({ id: orderId, status, updatedAt: new Date() })
-        .onConflictDoUpdate({ target: orders.id, set: { status, updatedAt: new Date() } });
+	await db.update(orders).set({ status, updatedAt: new Date() }).where(eq(orders.id, orderId));
 
-    await cleanupFinishedOrders();
+	await cleanupFinishedOrders();
 
-    return { id: orderId, status };
+	return { id: orderId, status };
 }
 
 export async function getOrderStatus(orderId: string) {
-    const result = await db.select().from(orders).where(eq(orders.id, orderId)).limit(1);
+	const result = await db.select().from(orders).where(eq(orders.id, orderId)).limit(1);
 
-    await cleanupFinishedOrders();
+	await cleanupFinishedOrders();
 
-    return result[0] ?? null;
+	return result[0] ?? null;
 }

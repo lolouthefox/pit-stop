@@ -28,7 +28,12 @@
 		try {
 			const response = await fetch('/api/order', {
 				method: 'POST',
-				body: JSON.stringify({ order, delivery, username: data.profile.username })
+				body: JSON.stringify({
+					order,
+					delivery,
+					username: data.profile.username,
+					userId: data.profile.id
+				})
 			});
 			if (!response.ok) {
 				alert("Impossible d'envoyer le panier.");
