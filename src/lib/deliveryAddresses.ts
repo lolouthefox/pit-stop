@@ -1,4 +1,4 @@
-export default [
+const deliveryAddresses = [
 	{
 		name: 'Jardin',
 		addresses: [
@@ -51,3 +51,16 @@ export default [
 		]
 	}
 ];
+
+export default deliveryAddresses;
+
+export function getImageFromValue(value: string): string | undefined {
+	for (const floor of deliveryAddresses) {
+		for (const address of floor.addresses) {
+			if (address.value === value) {
+				return address.img;
+			}
+		}
+	}
+	return undefined;
+}

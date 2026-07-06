@@ -1,5 +1,5 @@
 <script lang="ts">
-	import rooms from '$lib/deliveryAddresses';
+	import rooms, { getImageFromValue } from '$lib/deliveryAddresses';
 	import CategoryTabs from '$lib/comps/CategoryTabs.svelte';
 	import { type MenuItem } from '$lib/menu';
 	import { onMount } from 'svelte';
@@ -197,11 +197,7 @@
 						</optgroup>
 					{/each}
 				</select>
-				<img
-					src={rooms.find((c) => c.name === delivery)?.addresses[0]?.img}
-					class="w-full"
-					alt=""
-				/>
+				<img src={getImageFromValue(delivery)} class="w-full" alt="" />
 			</div>
 			<button
 				class="mx-4 mb-4 rounded-2xl bg-red-800 p-4 text-white disabled:opacity-50"
