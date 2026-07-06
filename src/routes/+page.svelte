@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { categories } from '$lib/deliveryAddresses';
+	import rooms from '$lib/deliveryAddresses';
 	import CategoryTabs from '$lib/comps/CategoryTabs.svelte';
 	import { type MenuItem } from '$lib/menu';
 	import { onMount } from 'svelte';
@@ -189,7 +189,7 @@
 					bind:value={delivery}
 				>
 					<option disabled={true}>Livraison...</option>
-					{#each categories as category, i (i)}
+					{#each rooms as category, i (i)}
 						<optgroup label={category.name}>
 							{#each category.addresses as addresse, j (j)}
 								<option value={addresse.value}>{addresse.name}</option>
@@ -197,6 +197,11 @@
 						</optgroup>
 					{/each}
 				</select>
+				<img
+					src={rooms.find((c) => c.name === delivery)?.addresses[0]?.img}
+					class="w-full"
+					alt=""
+				/>
 			</div>
 			<button
 				class="mx-4 mb-4 rounded-2xl bg-red-800 p-4 text-white disabled:opacity-50"

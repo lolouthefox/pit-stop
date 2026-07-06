@@ -1,45 +1,53 @@
-export let categories = [
-    {
-        name: "Jardin",
-        addresses: [
-            { value: "JARDIN Piscine", name: "Piscine" },
-            { value: "JARDIN Terrasse", name: "Terrasse" },
-            { value: "JARDIN Pelouse", name: "Pelouse" }
-        ]
-    },
-    {
-        name: "Rez-de-Chaussée",
-        addresses: [
-            { value: "RDC Cuisine", name: "Cuisine" },
-            { value: "RDC Salon", name: "Salon" },
-            { value: "RDC Salle à Manger", name: "Salle à Manger" },
-            { value: "RDC Bureau", name: "Bureau" },
-            { value: "RDC Salle de Bain", name: "Salle de Bain" },
-            { value: "RDC Studio", name: "Studio" },
-            { value: "RDC Verranda", name: "Verranda" },
-        ]
-    },
-    {
-        name: "1er Étage",
-        addresses: [
-            { value: "1ER Chambre Jess", name: "Chambre Jess" },
-            { value: "1ER Garde-robe", name: "Garde-robe" },
-            { value: "1ER Chambre Marido", name: "Chambre Marido" }
-        ]
-    },
-    {
-        name: "2em Étage",
-        addresses: [
-            { value: "2EM Chambre Liam", name: "Chambre Liam" },
-            { value: "2EM Chambre Rom & Nad", name: "Chambre Rom & Nad" },
-            { value: "2EM Salle de Bain", name: "Salle de Bain" }
-        ]
-    },
-    {
-        name: "3em Étage",
-        addresses: [
-            { value: "2EM Salon", name: "Salon" },
-            { value: "2EM Studio", name: "Studio" },
-        ]
-    },
-]
+export default [
+	{
+		name: 'Jardin',
+		addresses: [
+			{ value: 'JARDIN Piscine', name: 'Piscine', img: '/rooms/floorplan-0-pool.svg' },
+			{ value: 'JARDIN Terrasse', name: 'Terrasse', img: '/rooms/floorplan-0-terrasse.svg' },
+			{ value: 'JARDIN Pelouse', name: 'Pelouse', img: '/rooms/floorplan-0-pelouse.svg' }
+		]
+	},
+	{
+		name: 'Rez-de-Chaussée',
+		addresses: [
+			{ value: 'RDC Cuisine', name: 'Cuisine', img: '/rooms/floorplan-1-kitchen.svg' },
+			{ value: 'RDC Salon', name: 'Salon', img: '/rooms/floorplan-1-living-room.svg' },
+			{
+				value: 'RDC Salle à Manger',
+				name: 'Salle à Manger',
+				img: '/rooms/floorplan-1-dining-room.svg'
+			},
+			{ value: 'RDC Bureau', name: 'Bureau', img: '/rooms/floorplan-1-bureau.svg' },
+			{ value: 'RDC Salle de Bain', name: 'Salle de Bain', img: '/rooms/floorplan-1-bathroom.svg' },
+			{ value: 'RDC Studio', name: 'Studio', img: '/rooms/floorplan-1-studio.svg' },
+			{ value: 'RDC Verranda', name: 'Verranda', img: '/rooms/floorplan-1-verranda.svg' }
+		]
+	},
+	{
+		name: '1er Étage',
+		addresses: [
+			{ value: '1ER Chambre Jess', name: 'Chambre Jess', img: '/rooms/floorplan-2-jess.svg' },
+			{ value: '1ER Garde-robe', name: 'Garde-robe', img: '/rooms/floorplan-2-dressing-room.svg' },
+			{ value: '1ER Chambre Marido', name: 'Chambre Marido', img: '/rooms/floorplan-2-marido.svg' }
+		]
+	},
+	{
+		name: '2em Étage',
+		addresses: [
+			{ value: '2EM Chambre Liam', name: 'Chambre Liam', img: '/rooms/floorplan-2-liam.svg' },
+			{
+				value: '2EM Chambre Rom & Nad',
+				name: 'Chambre Rom & Nad',
+				img: '/rooms/floorplan-2-rom-nad.svg'
+			},
+			{ value: '2EM Salle de Bain', name: 'Salle de Bain', img: '/rooms/floorplan-2-bathroom.svg' }
+		]
+	},
+	{
+		name: '3em Étage',
+		addresses: [
+			{ value: '3EM Salon', name: 'Salon', img: '/rooms/floorplan-3-living-room.svg' },
+			{ value: '3EM Studio', name: 'Studio', img: '/rooms/floorplan-3-studio.svg' }
+		]
+	}
+];
