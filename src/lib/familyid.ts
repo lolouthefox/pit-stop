@@ -3,7 +3,7 @@ export async function getUserId(access_token: string) {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: `bearer ${access_token}`
+			Authorization: `Bearer ${access_token}`
 		}
 	});
 	const data = await response.json();
@@ -15,7 +15,7 @@ export async function getUserProfile(access_token: string) {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: `bearer ${access_token}`
+			Authorization: `Bearer ${access_token}`
 		}
 	});
 	const data = await response.json();
