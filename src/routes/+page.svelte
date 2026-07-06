@@ -145,9 +145,6 @@
 			{/if}
 		</div>
 	{/if}
-
-	<p>{data.profile.id}</p>
-	<p>{JSON.stringify(data, null, '  ')}</p>
 </div>
 
 {#if showCart}

@@ -19,5 +19,5 @@ export async function getUserProfile(access_token: string) {
 		}
 	});
 	const data = await response.json();
-	return data;
+	return data.profile;
 }
