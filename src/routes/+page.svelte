@@ -200,7 +200,7 @@
 			</div>
 			<button
 				class="mx-4 mb-4 rounded-2xl bg-red-800 p-4 text-white disabled:opacity-50"
-				disabled={cooking}
+				disabled={cooking || !delivery}
 				onclick={() => {
 					sendCart();
 				}}
