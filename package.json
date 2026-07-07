@@ -46,6 +46,9 @@
 	},
 	"dependencies": {
 		"@neondatabase/serverless": "^1.0.2",
+		"@phosphor-icons/web": "^2.1.2",
+		"posthog-js": "^1.398.0",
+		"posthog-node": "^5.39.4",
 		"uuid": "^13.0.0"
 	}
 }

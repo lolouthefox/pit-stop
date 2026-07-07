@@ -8,11 +8,17 @@
 	import Featurette from '$lib/comps/Featurette.svelte';
 	import HorizontalItem from '$lib/comps/HorizontalItem.svelte';
 	import GridItem from '$lib/comps/GridItem.svelte';
+	import posthog from 'posthog-js';
+	import { browser } from '$app/environment';
+	import { statusTraductions } from '$lib/deliveryStatus.js';
 
 	let delivery: string = $state('');
 	let cooking = $state(false);
 	let cartStep: 'review' | 'delivery' | 'complete' = $state('review');
 	let { data } = $props();
+
+	// Feature flags
+	let showFeaturette: boolean | undefined = $state(false);
 
 	let order: OrderItem[] = $state([]);
 	let menu: MenuItem[] = $derived(data.menu ?? []);
@@ -95,11 +101,53 @@
 	let kitchenOpen: boolean = $derived(data.kitchenStatus === 'open' ? true : false);
 	let featuredItem: MenuItem | null = $state(null);
 	onMount(async () => {
+		// Load feature flags
+		if (browser) {
+			showFeaturette = posthog.isFeatureEnabled('featurette');
+			console.log('Show the featurette: ' + showFeaturette);
+		}
+
 		// Pick a random menu item on the client.
 		if (menu.length > 0) {
 			const idx = Math.floor(Math.random() * menu.length);
 			featuredItem = menu[idx];
 		}
+	});
+
+	// Delivery Status
+	let orderStatusesLoading: string = $state('Chargement...');
+	let orderStatuses: Array<{ id: string; status: string; updatedAt?: string }> = $state([]);
+	let currentOrderStatus: { id: string; status: string; updatedAt?: string } | undefined =
+		$state(undefined);
+	async function fetchOrderStatuses() {
+		try {
+			const response = await fetch('/api/orderStatus');
+			if (response.ok) {
+				orderStatuses = await response.json();
+				orderStatusesLoading = 'Aucune commande.';
+				currentOrderStatus = orderStatuses.filter(
+					(order) => order.status != 'completed' && order.status != 'cancelled'
+				)[0];
+			} else {
+				orderStatusesLoading = 'Erreur lors du chargement des statuts';
+			}
+		} catch (e) {
+			console.error('unable to fetch order statuses', e);
+			orderStatusesLoading = 'Erreur lors de la lecture des commandes';
+		}
+	}
+
+	onMount(() => {
+		// Fetch immediately
+		fetchOrderStatuses();
+
+		// Set up interval to fetch every second
+		const interval = setInterval(fetchOrderStatuses, 1000);
+
+		// Cleanup function
+		return () => {
+			clearInterval(interval);
+		};
 	});
 </script>
 
@@ -114,9 +162,16 @@
 			<span>La cuisine est fermée !</span>
 		</div>
 	{:else}
-		<Header avatarUrl={data.profile.profilePicture} />
+		<Header profile={data.profile} {orderStatusesLoading} {orderStatuses} />
 
-		{#if data.flags.featurette}
+		{#if currentOrderStatus}
+			<div class="w-full bg-red-900 p-8 text-white">
+				<h1 class="text-2xl font-bold">Commande en cours</h1>
+				<span>{statusTraductions[currentOrderStatus.status]}</span>
+			</div>
+		{/if}
+
+		{#if showFeaturette}
 			<Featurette {featuredItem} {isInCart} {removeFromCart} {addToCart} />
 		{/if}
 
@@ -154,12 +209,12 @@
 	<div class="fixed inset-0 z-50 flex flex-col gap-4 bg-white">
 		<div class="flex w-full p-4">
 			<button
-				class="rounded-full bg-red-800 px-4 py-2 font-semibold text-white disabled:opacity-50 disabled:grayscale-100"
+				class="rounded-full bg-red-100 px-4 py-2 font-semibold text-red-900 disabled:opacity-50 disabled:grayscale-100"
 				onclick={() => {
 					showCart = false;
 				}}
 			>
-				⬅️ Fermer
+				Fermer
 			</button>
 		</div>
 		{#if cartStep === 'review'}
