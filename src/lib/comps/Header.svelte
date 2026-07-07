@@ -2,7 +2,6 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { statusTraductions } from '$lib/deliveryStatus';
-	import { onMount } from 'svelte';
 
 	let { profile, orderStatusesLoading, orderStatuses } = $props();
 

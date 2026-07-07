@@ -126,7 +126,7 @@
 				orderStatuses = await response.json();
 				orderStatusesLoading = 'Aucune commande.';
 				currentOrderStatus = orderStatuses.filter(
-					(order) => order.status != 'completed' && order.status != 'cancelled'
+					(order) => order.status != 'done' && order.status != 'cancelled'
 				)[0];
 			} else {
 				orderStatusesLoading = 'Erreur lors du chargement des statuts';
