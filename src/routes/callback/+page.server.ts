@@ -1,7 +1,7 @@
 import { FAMILYID_CLIENT_ID, FAMILYID_CLIENT_SECRET } from '$env/static/private';
 import { getUserId } from '$lib/familyid.js';
 import { redirect } from '@sveltejs/kit';
-import posthog from 'posthog-js';
+// import posthog from 'posthog-js';
 
 export const load = async ({ url, cookies }) => {
 	if (!url.searchParams.get('code')) {
@@ -25,6 +25,6 @@ export const load = async ({ url, cookies }) => {
 	cookies.set('refresh_token', data.refresh_token, { path: '/' });
 	cookies.set('expires_at', (Date.now() + data.expires_in * 1000).toString(), { path: '/' });
 	const userId = await getUserId(data.access_token);
-	posthog.identify(userId);
+	// posthog.identify(userId);
 	redirect(307, '/');
 };
