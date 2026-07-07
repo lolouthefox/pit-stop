@@ -149,6 +149,14 @@
 			clearInterval(interval);
 		};
 	});
+
+	const statusIcon: Record<string, string> = {
+		pending: 'clock',
+		preparing: 'cooking-pot',
+		delivering: 'package',
+		done: 'seal-check',
+		cancelled: 'seal-warning'
+	};
 </script>
 
 <svelte:head>
@@ -165,9 +173,12 @@
 		<Header profile={data.profile} {orderStatusesLoading} {orderStatuses} />
 
 		{#if currentOrderStatus}
-			<div class="w-full bg-red-900 p-8 text-white">
-				<h1 class="text-2xl font-bold">Commande en cours</h1>
-				<span>{statusTraductions[currentOrderStatus.status]}</span>
+			<div class="flex w-full items-center gap-4 bg-red-900 p-8 text-white">
+				<i class="ph-fill ph-{statusIcon[currentOrderStatus.status]} text-4xl"></i>
+				<div class="flex flex-col">
+					<h1 class="text-2xl font-bold">Commande en cours</h1>
+					<span>{statusTraductions[currentOrderStatus.status]}</span>
+				</div>
 			</div>
 		{/if}
 
