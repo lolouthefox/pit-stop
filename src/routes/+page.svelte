@@ -277,7 +277,7 @@
 			</button>
 		{:else if cartStep === 'commentary'}
 			<div class="flex flex-col gap-4 p-4">
-				<h3>Ajouter un commentaire</h3>
+				<h3 class="text-2xl font-bold">Ajouter un commentaire</h3>
 				<p>Vous avez déjà un verre, ou vous voulez pas de l'eau glacé?</p>
 				<input
 					type="text"
