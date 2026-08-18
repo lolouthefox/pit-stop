@@ -275,11 +275,17 @@
 			>
 				Suivant
 			</button>
-			{:else if cartStep === 'commentary'}
+		{:else if cartStep === 'commentary'}
 			<div class="flex flex-col gap-4 p-4">
-   <h3>Ajouter un commentaire</h3>
-   <p>Vous avez déjà un verre, ou vous voulez pas de l'eau glacé?</p>
-				<input type="text" class="rounded-2xl p-4" name="commentary" placeholder="Commentaire..." bind:value={commentary} />
+				<h3>Ajouter un commentaire</h3>
+				<p>Vous avez déjà un verre, ou vous voulez pas de l'eau glacé?</p>
+				<input
+					type="text"
+					class="rounded-2xl p-4"
+					name="commentary"
+					placeholder="Commentaire..."
+					bind:value={commentary}
+				/>
 			</div>
 			<button
 				class="mx-4 mb-4 rounded-2xl bg-red-800 p-4 text-white disabled:opacity-50"
@@ -290,6 +296,6 @@
 			>
 				{cooking ? '📩 Acheminement...' : '🧑‍🍳 Envoyer en cuisine'}
 			</button>
-			{/if}
+		{/if}
 	</div>
 {/if}
