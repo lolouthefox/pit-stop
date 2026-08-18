@@ -14,7 +14,7 @@
 
 	let delivery: string = $state('');
 	let cooking = $state(false);
-	let cartStep: 'review' | 'delivery' | 'complete' = $state('review');
+	let cartStep: 'review' | 'delivery' | 'commentary' | 'complete' = $state('review');
 	let { data } = $props();
 
 	// Feature flags
@@ -266,6 +266,20 @@
 				<img src={getImageFromValue(delivery)} class="w-full" alt="" />
 			</div>
 			<button
+				class="mx-4 mb-4 rounded-2xl bg-red-800 p-4 text-white"
+				onclick={() => {
+					cartStep = 'commentary';
+				}}
+			>
+				Suivant
+			</button>
+			{:else if cartStep === 'commentary'}
+			<div class="flex flex-col gap-4">
+   <h3>Ajouter un commentaire</h3>
+   <p>Vous avez déjà un verre, ou vous voulez pas de l'eau glacé?</p>
+				<input type="text" class="rounded-2xl p-4" name="commentary" placeholder="Commentaire..." />
+			</div>
+			<button
 				class="mx-4 mb-4 rounded-2xl bg-red-800 p-4 text-white disabled:opacity-50"
 				disabled={cooking || !delivery}
 				onclick={() => {
@@ -274,6 +288,6 @@
 			>
 				{cooking ? '📩 Acheminement...' : '🧑‍🍳 Envoyer en cuisine'}
 			</button>
-		{/if}
+			{/if}
 	</div>
 {/if}

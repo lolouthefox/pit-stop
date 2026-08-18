@@ -14,6 +14,7 @@ export const POST = async ({ request }) => {
 	const username = String(data.username ?? 'Unknown');
 	const userId = String(data.userId ?? 'Unknown');
 	const delivery = String(data.delivery ?? 'Unknown');
+	const commentary = String(data.commentary ?? 'None');
 	const order: OrderItem[] = data.order ?? [];
 
 	const time = new Date()
@@ -27,6 +28,7 @@ export const POST = async ({ request }) => {
 
 	let text = `<b>From:</b> ${escapeHtml(username)}\n`;
 	text += `<b>Delivery:</b> ${escapeHtml(delivery)}\n`;
+	text += `<b>Commentary:</b> ${escapeHtml(commentary)}\n`;
 	text += `<b>Time:</b> ${escapeHtml(time)}\n\n`;
 	text += `<b>Items:</b>\n`;
 
