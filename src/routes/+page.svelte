@@ -256,6 +256,8 @@
 					placeholder="Livraison..."
 					bind:value={delivery}
 				>
+					<h3 class="text-2xl font-bold">Livraison</h3>
+					<p>Choisissez votre adresse de livraison.</p>
 					<option disabled={true}>Livraison...</option>
 					{#each rooms as category, i (i)}
 						<optgroup label={category.name}>
