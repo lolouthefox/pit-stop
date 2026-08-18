@@ -13,6 +13,7 @@
 	import { statusTraductions } from '$lib/deliveryStatus.js';
 
 	let delivery: string = $state('');
+	let commentary: string = $state('');
 	let cooking = $state(false);
 	let cartStep: 'review' | 'delivery' | 'commentary' | 'complete' = $state('review');
 	let { data } = $props();
@@ -37,6 +38,7 @@
 				body: JSON.stringify({
 					order,
 					delivery,
+					commentary,
 					username: data.profile.username,
 					userId: data.profile.id
 				})
@@ -274,10 +276,10 @@
 				Suivant
 			</button>
 			{:else if cartStep === 'commentary'}
-			<div class="flex flex-col gap-4">
+			<div class="flex flex-col gap-4 p-4">
    <h3>Ajouter un commentaire</h3>
    <p>Vous avez déjà un verre, ou vous voulez pas de l'eau glacé?</p>
-				<input type="text" class="rounded-2xl p-4" name="commentary" placeholder="Commentaire..." />
+				<input type="text" class="rounded-2xl p-4" name="commentary" placeholder="Commentaire..." bind:value={commentary} />
 			</div>
 			<button
 				class="mx-4 mb-4 rounded-2xl bg-red-800 p-4 text-white disabled:opacity-50"
